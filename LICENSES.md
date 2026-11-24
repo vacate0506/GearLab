@@ -2,7 +2,7 @@
 
 ## 应用程序代码
 
-GearLab 器材研究所 v1.3.0 — © 2026 GearLab Studio。
+GearLab 器材研究所 v1.3.2 — © 2026 GearLab Studio。
 
 代码为项目定制开发，未包含任何第三方源代码库、NuGet 包或 JavaScript 运行时。
 

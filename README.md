@@ -12,7 +12,7 @@ GearLab 是一款面向摄影爱好者的 Windows 本地排版工具：选择一
 
 | 文件 | 说明 |
 |---|---|
-| [GearLab-Windows-1.3.0.zip](dist/GearLab-Windows-1.3.0.zip) | 免安装 Windows 版，解压后运行 `GearLab.exe` |
+| [GearLab-Windows-1.3.2.zip](dist/GearLab-Windows-1.3.2.zip) | 免安装 Windows 版，解压后运行 `GearLab.exe` |
 | [GearLabCLI.exe](windows/dist/GearLabCLI.exe) | 命令行批处理工具 |
 
 要求：Windows 10 / 11，系统自带的 .NET Framework 4.8。程序没有代码签名，首次运行如遇 SmartScreen，请选择「更多信息 → 仍要运行」。
@@ -101,7 +101,7 @@ GearLab 是一款面向摄影爱好者的 Windows 本地排版工具：选择一
 
 ## 使用步骤
 
-1. 解压 `GearLab-Windows-1.3.0.zip`，双击 `GearLab.exe`。
+1. 解压 `GearLab-Windows-1.3.2.zip`，双击 `GearLab.exe`。
 2. 点「导入照片」，或点「载入示例」先体验。示例会载入 4 张照片；默认「同步全部」开启，四张共用当前设置。
 3. 在右侧「相机模板」用 `‹` / `›` 或滚轮选择 11 款机身之一。想逐张使用不同机身或设置，先关闭右上角「同步全部」。
 4. 调整相机大小、标题、屏幕显示和上半幅背景色；上下始终保持 1:1。
@@ -211,6 +211,6 @@ GearLab/
 
 本项目不是 Ricoh、Fujifilm、Nikon、Sony 或 Lumix 的官方产品，与上述厂商无关联。
 
-**GearLab 1.3.0** · Windows · 2026
+**GearLab 1.3.2** · Windows · 2026
 
 发布包 SHA-256 校验值见 [dist/SHA256SUMS.txt](dist/SHA256SUMS.txt)。

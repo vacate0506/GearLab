@@ -122,7 +122,7 @@ namespace GearLab
                 "ricoh-gr4", "RICOH", "GR IV", "Ricoh GR IV", "GR IV",
                 "Rear view", "cameras.ricoh-gr4.png",
                 855f / 502f,
-                new RectangleF(0.035088f, 0.137450f, 0.676023f, 0.784861f),
+                new RectangleF(0.051990f, 0.186895f, 0.642220f, 0.715795f),
                 "#B7B5AE", true));
 
             list.Add(new CameraTemplate(
