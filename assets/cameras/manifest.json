@@ -1,0 +1,255 @@
+[
+  {
+    "id": "ricoh-gr4",
+    "file": "ricoh-gr4.png",
+    "raw": "理光gr4",
+    "brand": "RICOH",
+    "model": "GR IV",
+    "display": "Ricoh GR IV",
+    "card": "GR IV",
+    "accent": "#B7B5AE",
+    "aspect": 1.703187250996016,
+    "screen": [
+      0.035088,
+      0.13745,
+      0.676023,
+      0.784861
+    ],
+    "crop": [
+      112,
+      56,
+      855,
+      502
+    ]
+  },
+  {
+    "id": "fujifilm-x100vi",
+    "file": "fujifilm-x100vi-silver.png",
+    "raw": "fujifilm-x100vi-银色",
+    "brand": "FUJIFILM",
+    "model": "X100VI",
+    "display": "Fujifilm X100VI",
+    "card": "X100VI",
+    "accent": "#9E9C96",
+    "aspect": 1.7458563535911602,
+    "screen": [
+      0.107595,
+      0.301105,
+      0.530063,
+      0.621547
+    ],
+    "crop": [
+      84,
+      219,
+      632,
+      362
+    ]
+  },
+  {
+    "id": "fujifilm-xm5",
+    "file": "fujifilm-xm5-silver.png",
+    "raw": "fujifilm-xm5-银色",
+    "brand": "FUJIFILM",
+    "model": "X-M5",
+    "display": "Fujifilm X-M5",
+    "card": "X-M5",
+    "accent": "#9E9C96",
+    "aspect": 1.7220708446866484,
+    "screen": [
+      0.167722,
+      0.234332,
+      0.60443,
+      0.689373
+    ],
+    "crop": [
+      84,
+      216,
+      632,
+      367
+    ]
+  },
+  {
+    "id": "nikon-z5ii",
+    "file": "nikon-z5ii.png",
+    "raw": "nikon-z5ii",
+    "brand": "NIKON",
+    "model": "Z5II",
+    "display": "Nikon Z5II",
+    "card": "Z5II",
+    "accent": "#C5A24A",
+    "aspect": 1.3724696356275303,
+    "screen": [
+      0.132743,
+      0.425101,
+      0.538348,
+      0.502024
+    ],
+    "crop": [
+      20,
+      58,
+      678,
+      494
+    ]
+  },
+  {
+    "id": "nikon-z6iii",
+    "file": "nikon-z6iii.png",
+    "raw": "nikon-z6iii",
+    "brand": "NIKON",
+    "model": "Z6III",
+    "display": "Nikon Z6III",
+    "card": "Z6III",
+    "accent": "#C5A24A",
+    "aspect": 1.4095634095634095,
+    "screen": [
+      0.148968,
+      0.459459,
+      0.498525,
+      0.444906
+    ],
+    "crop": [
+      20,
+      64,
+      678,
+      481
+    ]
+  },
+  {
+    "id": "nikon-z8",
+    "file": "nikon-z8.png",
+    "raw": "nikon-z8",
+    "brand": "NIKON",
+    "model": "Z8",
+    "display": "Nikon Z8",
+    "card": "Z8",
+    "accent": "#C5A24A",
+    "aspect": 1.2766884531590414,
+    "screen": [
+      0.073379,
+      0.422658,
+      0.59727,
+      0.505447
+    ],
+    "crop": [
+      66,
+      75,
+      586,
+      459
+    ]
+  },
+  {
+    "id": "nikon-zr",
+    "file": "nikon-zr.png",
+    "raw": "nikon-zr",
+    "brand": "NIKON",
+    "model": "ZR",
+    "display": "Nikon ZR",
+    "card": "ZR",
+    "accent": "#C5A24A",
+    "aspect": 1.5586206896551724,
+    "screen": [
+      0.137168,
+      0.156322,
+      0.646018,
+      0.737931
+    ],
+    "crop": [
+      20,
+      87,
+      678,
+      435
+    ]
+  },
+  {
+    "id": "sony-a7c2",
+    "file": "sony-a7c2.png",
+    "raw": "sony-a7c2",
+    "brand": "SONY",
+    "model": "α7C II",
+    "display": "Sony α7C II",
+    "card": "α7C II",
+    "accent": "#75919A",
+    "aspect": 1.7862068965517242,
+    "screen": [
+      0.179537,
+      0.355172,
+      0.451737,
+      0.544828
+    ],
+    "crop": [
+      141,
+      105,
+      518,
+      290
+    ]
+  },
+  {
+    "id": "sony-a7c2-s",
+    "file": "sony-a7c2-silver.png",
+    "raw": "sony-a7c2-银色",
+    "brand": "SONY",
+    "model": "α7C II",
+    "display": "Sony α7C II",
+    "card": "α7C II",
+    "accent": "#75919A",
+    "aspect": 1.7903682719546743,
+    "screen": [
+      0.18038,
+      0.356941,
+      0.452532,
+      0.538244
+    ],
+    "crop": [
+      84,
+      224,
+      632,
+      353
+    ]
+  },
+  {
+    "id": "lumix-s9",
+    "file": "lumix-s9.png",
+    "raw": "lumix-s9",
+    "brand": "LUMIX",
+    "model": "LUMIX S9",
+    "display": "Lumix S9",
+    "card": "LUMIX S9",
+    "accent": "#4E6A78",
+    "aspect": 1.7381615598885793,
+    "screen": [
+      0.182692,
+      0.359331,
+      0.467949,
+      0.543175
+    ],
+    "crop": [
+      88,
+      220,
+      624,
+      359
+    ]
+  },
+  {
+    "id": "lumix-s9-s",
+    "file": "lumix-s9-silver.png",
+    "raw": "lumix-s9-银色",
+    "brand": "LUMIX",
+    "model": "LUMIX S9",
+    "display": "Lumix S9",
+    "card": "LUMIX S9",
+    "accent": "#4E6A78",
+    "aspect": 1.7370030581039755,
+    "screen": [
+      0.183685,
+      0.358818,
+      0.465376,
+      0.542304
+    ],
+    "crop": [
+      481,
+      509,
+      1704,
+      981
+    ]
+  }
+]

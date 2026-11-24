@@ -1,0 +1,3 @@
+5ba6db224d6733eac0d3bf4569f26f0fed517466d3660919d95ee616b644b826  GearLab-Windows-1.3.0.zip
+3d5abd532f44bb6de0db83bbd3c8679caeb4607fdf699c1c4d20615953b526c2  GearLab-Windows-1.3.0\GearLab.exe
+52d848b9c1cdf2df7da40bf3ff0495f78e25bf785424f9f301948b77902c539e  GearLab-Windows-1.3.0\GearLabCLI.exe
