@@ -6,6 +6,8 @@ GearLab 是一个本地运行的相机排版工具。选择相机模板、导入
 
 当前版本 **1.0**，提供 **Windows** 与 **Android** 两个平台。所有处理都在本机完成，不联网、不上传、不需要账号。
 
+![Windows](docs/examples/00_contact_sheet_wide.png)
+
 ## 示例展示
 
 以下四张作品均由 GearLab 生成：
