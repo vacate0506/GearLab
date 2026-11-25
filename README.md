@@ -23,13 +23,12 @@ GearLab 是一个本地运行的相机排版工具。选择相机模板、导入
 
 
 
-## 下载
+## [下载](https://github.com/vacate0506/GearLab/releases)
 
 | 平台 | 安装包 |
 |---|---|
-| Windows | [GearLab-Flutter-Windows-1.0.zip](dist/GearLab-Flutter-Windows-1.0.zip) |
-| Android | [GearLab-Android-1.0.apk](dist/GearLab-Android-1.0.apk)（Android 7.0 / API 24+） |
-| 校验值 | [SHA256SUMS-Flutter.txt](dist/SHA256SUMS-Flutter.txt) |
+| Windows | [GearLab-Flutter-Windows-1.0.zip](https://github.com/vacate0506/GearLab/releases/download/v1.0/GearLab-Flutter-Windows-1.0.zip) |
+| Android | [GearLab-Android-1.0.apk](https://github.com/vacate0506/GearLab/releases/download/v1.0/GearLab-Android-1.0.apk)（Android 7.0 / API 24+） ||
 
 - Windows：解压后保留 `GearLab-Windows-1.0` 文件夹，运行其中的 `GearLab.exe`。
 - Android：APK 为 release 构建、调试签名，可直接安装测试；正式分发前请替换为正式签名。
