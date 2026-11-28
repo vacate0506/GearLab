@@ -66,11 +66,10 @@ IDI_APP_ICON            ICON                    "resources\\app_icon.ico"
 #define VERSION_AS_NUMBER 1,0,0,0
 #endif
 
-#if defined(FLUTTER_VERSION)
-#define VERSION_AS_STRING FLUTTER_VERSION
-#else
-#define VERSION_AS_STRING "1.0.0"
-#endif
+// Explorer 的「属性 → 详细信息」显示的就是下面这行字符串。FLUTTER_VERSION 会把
+// pubspec 的 build number 一起带进来（1.1.0+1001000），对外不好看，所以这里写死
+// 显示版本；发版改版本时和 pubspec.yaml 的 build-name 一起改。
+#define VERSION_AS_STRING "1.1.0"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION VERSION_AS_NUMBER

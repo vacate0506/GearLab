@@ -87,9 +87,19 @@ bool FlutterWindow::OnCreate() {
           flutter_controller_->engine()->messenger(), "gearlab/drag_drop",
           &flutter::StandardMethodCodec::GetInstance());
   drag_drop_channel_->SetMethodCallHandler(
-      [](const flutter::MethodCall<flutter::EncodableValue>& call,
-         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>>
-             result) {
+      [this](const flutter::MethodCall<flutter::EncodableValue>& call,
+             std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>>
+                 result) {
+        if (call.method_name() == "setDarkMode") {
+          const auto* dark = std::get_if<bool>(call.arguments());
+          if (dark == nullptr) {
+            result->Error("bad_args", "Expected a bool");
+            return;
+          }
+          SetPreferredDarkMode(*dark);
+          result->Success();
+          return;
+        }
         if (call.method_name() == "openFolder") {
           const auto* path = std::get_if<std::string>(call.arguments());
           if (path == nullptr) {
@@ -141,6 +151,14 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
   }
 
   switch (message) {
+    case WM_GETMINMAXINFO: {
+      auto* info = reinterpret_cast<MINMAXINFO*>(lparam);
+      const UINT dpi = ::GetDpiForWindow(hwnd);
+      const double scale = (dpi == 0 ? 96 : dpi) / 96.0;
+      info->ptMinTrackSize.x = static_cast<LONG>(960 * scale);
+      info->ptMinTrackSize.y = static_cast<LONG>(640 * scale);
+      return 0;
+    }
     case WM_FONTCHANGE:
       flutter_controller_->engine()->ReloadSystemFonts();
       break;

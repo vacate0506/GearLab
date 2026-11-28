@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GearLab — UI refactor preview</title>
+<style>
+  :root{
+    --font-ui: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    --font-brand: "Segoe UI", "Microsoft YaHei UI", sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:#191919;
+    font-family:var(--font-ui);
+    color:#ddd;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+  }
+  svg.i{ width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; display:block; }
+  .board{ display:flex; gap:20px; padding:20px; align-items:flex-start; width:max-content; }
+  .device{ position:relative; flex:none; overflow:hidden; }
+  .desktop{ width:1440px; height:900px; }
+  .mobile{ width:390px; height:844px; border-radius:30px; }
+  .app{
+    width:100%; height:100%;
+    display:flex; flex-direction:column;
+    background:var(--surface);
+    color:var(--ink);
+    font-size:13px;
+    line-height:1.45;
+    letter-spacing:0;
+    overflow:hidden;
+  }
+
+  /* ============ semantic tokens ============ */
+  .theme-light{
+    --surface:#F2EEE4;
+    --canvas:#EAE5D8;
+    --raised:#FBF8F0;
+    --sunken:#E5DED0;
+    --line:#D6CFC0;
+    --line-soft:#E2DBCC;
+    --line-strong:#8B8476;
+    --ink:#171411;
+    --ink-2:#4F4A42;
+    --ink-3:#6F695E;
+    --accent:#E24A10;
+    --accent-brand:#FF5A1F;
+    --accent-soft:#F9E1D4;
+    --accent-text:#B9400F;
+    --on-accent:#190B04;
+    --focus:#B9400F;
+    --stage:#E4DED0;
+    --crop:rgba(23,20,17,.24);
+    --print-shadow:0 18px 46px rgba(61,48,30,.17), 0 2px 5px rgba(61,48,30,.10);
+    --print-border:rgba(23,20,17,.08);
+    --hover:rgba(23,20,17,.05);
+    --pressed:rgba(23,20,17,.09);
+    --scrim:rgba(23,20,17,.42);
+    --camera-shadow:drop-shadow(0 7px 10px rgba(63,48,27,.14));
+  }
+  .theme-dark{
+    --surface:#101214;
+    --canvas:#0B0C0D;
+    --raised:#191C1F;
+    --sunken:#070808;
+    --line:#282C30;
+    --line-soft:#1E2226;
+    --line-strong:#737A83;
+    --ink:#F4F1EA;
+    --ink-2:#CFCBC2;
+    --ink-3:#9EA29B;
+    --accent:#FF6A3D;
+    --accent-brand:#FF6A3D;
+    --accent-soft:#3A211A;
+    --accent-text:#FF9A78;
+    --on-accent:#1A0A04;
+    --focus:#FFB59C;
+    --stage:#060707;
+    --crop:rgba(244,241,234,.17);
+    --print-shadow:0 22px 60px rgba(0,0,0,.62), 0 2px 8px rgba(0,0,0,.4);
+    --print-border:rgba(244,241,234,.07);
+    --hover:rgba(244,241,234,.055);
+    --pressed:rgba(244,241,234,.09);
+    --scrim:rgba(0,0,0,.62);
+    --camera-shadow:drop-shadow(0 8px 14px rgba(0,0,0,.55));
+  }
+  .theme-inner{ background:var(--canvas); }
+
+  /* ============ top bar ============ */
+  .topbar{
+    height:56px; flex:none; display:flex; align-items:center; gap:18px;
+    padding:0 18px; border-bottom:1px solid var(--line);
+    background:var(--surface);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; flex:none; }
+  .logo{ width:26px; height:26px; display:block; border-radius:6px; }
+  .wordmark{ font-family:var(--font-brand); font-size:14.5px; font-weight:700; letter-spacing:.16em; line-height:1; }
+  .brand-cn{ font-size:10.5px; font-weight:500; color:var(--ink-3); letter-spacing:.05em; padding-left:10px; border-left:1px solid var(--line); line-height:1.4; }
+  .topbar-note{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    color:var(--ink-3); font-size:11px; letter-spacing:.02em;
+  }
+  .topbar-note .i{ width:13px; height:13px; }
+  .top-actions{ display:flex; align-items:center; gap:7px; flex:none; }
+  .icon-btn{
+    width:30px; height:30px; border:0; padding:0; border-radius:5px;
+    display:grid; place-items:center; background:transparent; color:var(--ink-2);
+    cursor:default;
+  }
+  .icon-btn:hover{ background:var(--hover); color:var(--ink); }
+  .icon-btn .i{ width:16px; height:16px; }
+  .btn{
+    height:32px; border:1px solid transparent; border-radius:5px; padding:0 12px;
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    font-family:var(--font-ui); font-size:12px; font-weight:600; letter-spacing:.01em;
+    white-space:nowrap; cursor:default; color:var(--ink);
+  }
+  .btn .i{ width:14px; height:14px; }
+  .btn-primary{ background:var(--accent); color:var(--on-accent); border-color:var(--accent); }
+  .btn-primary:hover{ filter:brightness(.94); }
+  .btn-secondary{ background:transparent; border-color:var(--line-strong); color:var(--ink); }
+  .btn-secondary:hover{ background:var(--hover); }
+  .btn-ghost{ background:transparent; border-color:transparent; color:var(--ink-2); }
+  .btn-ghost:hover{ background:var(--hover); }
+
+  /* ============ workspace ============ */
+  .workspace{ flex:1; display:flex; min-height:0; background:var(--surface); }
+  .pane{ display:flex; flex-direction:column; min-height:0; background:var(--surface); }
+  .pane-head{
+    height:47px; flex:none; display:flex; align-items:center; gap:10px;
+    padding:0 14px 0 16px; border-bottom:1px solid var(--line);
+  }
+  .pane-title{ font-size:12.5px; font-weight:600; letter-spacing:.01em; display:flex; align-items:center; gap:7px; }
+  .count{
+    font-size:10.5px; font-weight:600; color:var(--ink-3);
+    font-variant-numeric:tabular-nums; letter-spacing:.03em;
+    padding-left:2px;
+  }
+  .pane-head-actions{ margin-left:auto; display:flex; align-items:center; gap:2px; }
+  .pane-head .icon-btn{ width:27px; height:27px; }
+  .pane-head .icon-btn .i{ width:14px; height:14px; }
+  .live-dot{ width:5px; height:5px; border-radius:50%; background:var(--accent); flex:none; }
+  .dim{ margin-left:auto; color:var(--ink-3); font-size:10.5px; font-variant-numeric:tabular-nums; letter-spacing:.02em; }
+
+  /* ============ library ============ */
+  .library{ width:276px; flex:none; border-right:1px solid var(--line); }
+  .photo-list{ flex:1; overflow:hidden; padding:5px 8px; }
+  .photo-row{
+    height:66px; display:flex; align-items:center; gap:9px;
+    padding:0 8px 0 9px; border-radius:5px; position:relative;
+    color:var(--ink-2);
+  }
+  .photo-row + .photo-row{ margin-top:2px; }
+  .photo-row.selected{ background:var(--accent-soft); color:var(--ink); }
+  .photo-row.selected::before{
+    content:""; position:absolute; left:0; top:9px; bottom:9px; width:2px;
+    background:var(--accent); border-radius:1px;
+  }
+  .photo-index{
+    width:16px; flex:none; font-size:9.5px; font-weight:600; color:var(--ink-3);
+    font-variant-numeric:tabular-nums; letter-spacing:.06em;
+  }
+  .photo-row.selected .photo-index{ color:var(--accent-text); }
+  .thumb{ width:52px; height:39px; flex:none; object-fit:cover; border-radius:3px; border:1px solid var(--line-soft); background:var(--raised); }
+  .photo-copy{ min-width:0; flex:1; }
+  .photo-name{ font-size:11.8px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.005em; }
+  .photo-meta{ margin-top:2px; font-size:9.8px; color:var(--ink-3); font-variant-numeric:tabular-nums; letter-spacing:.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row-x{ width:22px; height:22px; flex:none; border:0; background:transparent; color:var(--ink-3); display:grid; place-items:center; border-radius:4px; }
+  .row-x .i{ width:12px; height:12px; }
+  .photo-row.selected .row-x{ color:var(--ink-2); }
+  .library-foot{
+    height:40px; flex:none; border-top:1px solid var(--line);
+    display:flex; align-items:center; gap:7px; padding:0 16px;
+    color:var(--ink-3); font-size:10.2px; letter-spacing:.02em;
+  }
+  .library-foot .i{ width:13px; height:13px; }
+
+  /* ============ stage ============ */
+  .stage-pane{ flex:1; min-width:0; }
+  .stage-body{
+    flex:1; min-height:0; position:relative; background:var(--stage);
+    display:flex; align-items:center; justify-content:center;
+    padding:22px 30px; overflow:hidden;
+  }
+  .crop{ position:absolute; width:13px; height:13px; opacity:.9; }
+  .crop.tl{ left:16px; top:16px; border-left:1px solid var(--crop); border-top:1px solid var(--crop); }
+  .crop.tr{ right:16px; top:16px; border-right:1px solid var(--crop); border-top:1px solid var(--crop); }
+  .crop.bl{ left:16px; bottom:16px; border-left:1px solid var(--crop); border-bottom:1px solid var(--crop); }
+  .crop.br{ right:16px; bottom:16px; border-right:1px solid var(--crop); border-bottom:1px solid var(--crop); }
+  .print{
+    display:block; height:100%; width:auto; max-width:100%; object-fit:contain;
+    box-shadow:var(--print-shadow);
+    outline:1px solid var(--print-border); outline-offset:-1px;
+  }
+  .stage-foot{
+    height:35px; flex:none; border-top:1px solid var(--line);
+    display:flex; align-items:center; gap:16px; padding:0 16px;
+    color:var(--ink-3); font-size:9.8px; letter-spacing:.035em;
+    font-variant-numeric:tabular-nums;
+  }
+  .stage-foot .right{ margin-left:auto; }
+  .stage-foot .sep{ opacity:.45; }
+
+  /* ============ inspector ============ */
+  .inspector{ width:352px; flex:none; border-left:1px solid var(--line); }
+  .inspector-head{ display:flex; align-items:center; gap:10px; }
+  .sync{ margin-left:auto; display:flex; align-items:center; gap:8px; color:var(--ink-2); font-size:10.8px; font-weight:500; letter-spacing:.015em; }
+  .switch{
+    width:30px; height:17px; border-radius:999px; background:var(--accent);
+    position:relative; flex:none;
+  }
+  .switch::after{
+    content:""; position:absolute; width:11px; height:11px; border-radius:50%;
+    background:var(--on-accent); top:3px; right:3px;
+  }
+  .switch.off{ background:var(--line-strong); }
+  .switch.off::after{ left:3px; right:auto; background:var(--raised); }
+  .inspector-scroll{ flex:1; min-height:0; overflow:hidden; }
+  .section{ padding:14px 16px 15px; border-bottom:1px solid var(--line-soft); }
+  .section-head{ display:flex; align-items:center; gap:8px; margin-bottom:11px; }
+  .section-mark{ width:2px; height:11px; border-radius:1px; background:var(--accent); flex:none; }
+  .section-title{ font-size:11.6px; font-weight:600; letter-spacing:.03em; color:var(--ink); }
+  .section-meta{ margin-left:auto; font-size:9.8px; color:var(--ink-3); letter-spacing:.02em; }
+
+  .camera-strip{ display:flex; gap:6px; }
+  .camera-card{
+    width:74px; flex:none; padding:6px 5px 7px; border:1px solid transparent; border-radius:5px;
+    display:flex; flex-direction:column; align-items:stretch; gap:5px;
+    background:transparent;
+  }
+  .camera-card.selected{ background:var(--raised); border-color:var(--accent); box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .camera-img-wrap{ height:46px; display:flex; align-items:center; justify-content:center; }
+  .camera-img{ max-width:100%; max-height:46px; object-fit:contain; filter:var(--camera-shadow); }
+  .camera-brand{ font-size:7.8px; font-weight:600; letter-spacing:.11em; color:var(--ink-3); white-space:nowrap; overflow:hidden; }
+  .camera-model{ font-size:10.2px; font-weight:600; color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.005em; }
+  .camera-card.selected .camera-model{ color:var(--ink); }
+  .camera-nav{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; color:var(--ink-3); }
+  .camera-nav .icon-btn{ width:23px; height:20px; }
+  .camera-nav .icon-btn .i{ width:13px; height:13px; }
+  .camera-hint{ font-size:9.5px; color:var(--ink-3); letter-spacing:.02em; }
+
+  .field-label{ font-size:10.6px; font-weight:600; color:var(--ink-2); letter-spacing:.02em; margin-bottom:5px; }
+  .field-row{ display:flex; align-items:center; gap:10px; }
+  .field-row + .field-row{ margin-top:7px; }
+  .field-row .field-label{ margin:0; flex:none; width:56px; }
+  .input{
+    flex:1; min-width:0; height:31px; border:1px solid var(--line); border-radius:5px;
+    background:var(--raised); display:flex; align-items:center; padding:0 9px;
+    color:var(--ink); font-size:11.8px; letter-spacing:.005em;
+  }
+  .input.placeholder{ color:var(--ink-3); }
+  .input.focus{ border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .field-switch{ margin-left:auto; display:flex; align-items:center; gap:7px; font-size:10.4px; color:var(--ink-2); }
+  .field-stack{ display:flex; flex-direction:column; gap:7px; }
+  .field-stack .input{ width:100%; }
+
+  .meta-rows{ display:flex; flex-direction:column; gap:7px; }
+  .meta-row{ display:flex; align-items:center; gap:12px; font-size:10.8px; color:var(--ink-3); }
+  .meta-row .k{ color:var(--ink-2); }
+  .meta-row .v{ margin-left:auto; font-variant-numeric:tabular-nums; color:var(--ink-2); }
+  .slider-row{ margin-top:10px; }
+  .slider-top{ display:flex; align-items:center; font-size:10.6px; color:var(--ink-2); margin-bottom:8px; }
+  .slider-top .v{ margin-left:auto; font-variant-numeric:tabular-nums; color:var(--ink); font-size:10.8px; font-weight:600; }
+  .track{ height:2px; background:var(--line); position:relative; border-radius:2px; margin:0 5px; }
+  .track .fill{ position:absolute; left:0; top:0; bottom:0; width:40%; background:var(--accent); border-radius:2px; }
+  .track .knob{ position:absolute; width:11px; height:11px; border-radius:50%; background:var(--accent); top:-4.5px; left:calc(40% - 5.5px); border:2px solid var(--surface); }
+  .helper{ margin-top:8px; font-size:9.6px; line-height:1.55; color:var(--ink-3); letter-spacing:.01em; }
+
+  .hex-chip{
+    height:24px; padding:0 8px; border:1px solid var(--line); border-radius:4px;
+    background:var(--raised); display:flex; align-items:center; gap:6px;
+    font-size:9.6px; color:var(--ink-2); letter-spacing:.04em; font-variant-numeric:tabular-nums;
+  }
+  .hex-dot{ width:12px; height:12px; border-radius:2px; background:#fff; border:1px solid var(--line); }
+  .swatches{ display:flex; align-items:center; gap:9px; margin-top:9px; }
+  .swatch{ width:19px; height:19px; border-radius:50%; border:1px solid var(--line-strong); flex:none; }
+  .swatch.selected{ box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px var(--accent); border-color:transparent; }
+
+  .segmented{ display:flex; height:29px; padding:2px; border:1px solid var(--line); border-radius:5px; background:var(--sunken); }
+  .segment{ flex:1; display:flex; align-items:center; justify-content:center; gap:5px; font-size:10.8px; color:var(--ink-3); border-radius:3px; letter-spacing:.02em; }
+  .segment.selected{ background:var(--raised); color:var(--ink); box-shadow:0 1px 1px rgba(0,0,0,.05); font-weight:600; }
+  .segment .i{ width:12px; height:12px; }
+  .screen-row{ display:flex; align-items:center; gap:12px; }
+  .screen-row .segmented{ width:150px; flex:none; }
+  .screen-row .glare{ margin-left:auto; display:flex; align-items:center; gap:7px; font-size:10.4px; color:var(--ink-2); }
+  .export-bar{
+    height:56px; flex:none; border-top:1px solid var(--line);
+    background:var(--surface); display:flex; align-items:center; gap:7px; padding:0 16px;
+  }
+  .export-bar .btn{ height:34px; font-size:11.4px; }
+  .export-bar .btn-secondary{ flex:1; }
+  .export-bar .btn-primary{ flex:1.55; }
+
+  /* ============ mobile ============ */
+  .mobile .topbar{ height:52px; padding:0 12px; gap:10px; }
+  .mobile .logo{ width:24px; height:24px; border-radius:5px; }
+  .mobile .wordmark{ font-size:13px; letter-spacing:.14em; }
+  .mobile .brand-cn{ display:none; }
+  .mobile .topbar-note{ display:none; }
+  .mobile .top-actions{ margin-left:auto; gap:4px; }
+  .mobile .icon-btn{ width:32px; height:32px; }
+  .mobile .btn{ height:34px; font-size:12px; padding:0 11px; }
+  .mobile .btn .i{ width:14px; height:14px; }
+  .statusbar{
+    height:24px; flex:none; display:flex; align-items:center; padding:0 16px 0 18px;
+    background:var(--surface); color:var(--ink); font-size:10.5px; font-weight:600;
+    letter-spacing:.01em; font-variant-numeric:tabular-nums;
+  }
+  .statusbar .right{ margin-left:auto; display:flex; align-items:center; gap:5px; }
+  .statusbar .bar{ width:3px; height:8px; background:currentColor; border-radius:1px; opacity:.9; }
+  .statusbar .bar:nth-child(2){ height:10px; opacity:.8; }
+  .statusbar .bar:nth-child(3){ height:12px; opacity:.65; }
+  .statusbar .battery{ width:18px; height:9px; border:1px solid currentColor; border-radius:2px; position:relative; opacity:.9; }
+  .statusbar .battery::after{ content:""; position:absolute; left:1px; top:1px; bottom:1px; width:11px; background:currentColor; border-radius:1px; }
+  .mobile .stage-body{ padding:14px 22px; }
+  .mobile .stage-head{ height:40px; }
+  .mobile .stage-foot{ display:none; }
+  .mobile .preview-wrap{ flex:none; display:flex; flex-direction:column; height:286px; border-bottom:1px solid var(--line); background:var(--surface); }
+  .mobile .pane-head{ padding:0 12px; }
+  .mobile .pane-title{ font-size:12px; }
+  .mobile .dim{ font-size:9.5px; }
+  .mobile .library-strip{ flex:none; border-bottom:1px solid var(--line); background:var(--surface); }
+  .mobile .library-strip .pane-head{ height:40px; border-bottom:0; padding:0 12px; }
+  .mobile .strip-list{ display:flex; gap:6px; padding:0 12px 10px; overflow:hidden; }
+  .mobile .strip-card{ width:78px; height:58px; flex:none; border-radius:4px; position:relative; overflow:hidden; border:1px solid var(--line-soft); background:var(--raised); }
+  .mobile .strip-card.selected{ border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .mobile .strip-card img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .mobile .strip-index{ position:absolute; top:3px; left:4px; font-size:8px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.6); font-variant-numeric:tabular-nums; }
+  .mobile .strip-card.selected::after{ content:""; position:absolute; inset:0; border:1px solid var(--surface); opacity:.0; }
+
+  .mobile .tabs{ flex:none; height:39px; display:flex; align-items:stretch; padding:0 6px; gap:2px; border-bottom:1px solid var(--line); background:var(--surface); }
+  .mobile .tab{ flex:1; display:flex; align-items:center; justify-content:center; font-size:10.8px; color:var(--ink-3); position:relative; letter-spacing:.02em; }
+  .mobile .tab.active{ color:var(--ink); font-weight:600; }
+  .mobile .tab.active::after{ content:""; position:absolute; left:12px; right:12px; bottom:0; height:2px; background:var(--accent); border-radius:1px; }
+  .mobile .mobile-content{ flex:1; min-height:0; overflow:hidden; }
+  .mobile .section{ padding:11px 14px 12px; }
+  .mobile .camera-card{ width:calc((100% - 12px)/3); }
+  .mobile .camera-img-wrap{ height:52px; }
+  .mobile .camera-img{ max-height:52px; }
+  .mobile .camera-model{ font-size:9.8px; }
+  .mobile .camera-brand{ font-size:7.5px; }
+  .mobile .camera-hint{ display:none; }
+  .mobile .camera-nav{ margin-top:7px; }
+  .mobile .export-bar{ height:64px; padding:0 12px 0 14px; gap:8px; }
+  .mobile .export-bar .btn{ height:40px; font-size:12px; }
+  .mobile .export-bar .btn-secondary{ flex:0 0 84px; font-size:11.6px; }
+  .mobile .export-bar .btn-primary{ flex:1; }
+
+  .board-label{ display:none; }
+  .mobile-tools{
+    flex:none; height:33px; display:flex; align-items:center; gap:8px;
+    padding:0 14px; border-bottom:1px solid var(--line-soft); background:var(--surface);
+    color:var(--ink-2); font-size:10.8px;
+  }
+  .mobile-tools .title{ font-weight:600; color:var(--ink); font-size:11.2px; letter-spacing:.02em; }
+  .mobile-tools .sync{ margin-left:auto; font-size:10.2px; }
+  .mobile-tools .icon-btn{ width:26px; height:26px; }
+  .mobile-tools .icon-btn .i{ width:14px; height:14px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.2 19 6v5.1c0 4.4-2.9 7.4-7 8.9-4.1-1.5-7-4.5-7-8.9V6l7-2.8Z"/><path d="m9.2 11.8 2 2 3.6-3.7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l.9 13h8.2L17 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 4v5h5"/><path d="M5.2 9a8 8 0 1 1-.4 4.2"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-translate" viewBox="0 0 24 24"><path d="M4 5h9M8.5 5c0 4.2-2.1 6.7-5 8M6 9.5c1.6 2.7 4 4.5 6.3 5.1M13 20l3.3-9 3.7 9M14.4 16.5h4.6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.6"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M18.5 5.5 17 7M7 17l-1.5 1.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.8A8.2 8.2 0 0 1 9.2 4a8.2 8.2 0 1 0 10.8 10.8Z"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v9H3z"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1.4"/><circle cx="8.5" cy="10" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4.2 4.2L19 6.5"/></symbol>
+</svg>
+
+<div class="board">
+  <!-- ================= DESKTOP LIGHT ================= -->
+  <div class="device desktop theme-light" id="desktop-light">
+    <div class="app">
+      <div class="topbar">
+        <div class="brand">
+          <img class="logo" src="../../flutter_app/assets/app_icon.png" alt="GearLab" />
+          <span class="wordmark">GEARLAB</span>
+          <span class="brand-cn">器材研究所</span>
+        </div>
+        <div class="topbar-note"><svg class="i"><use href="#i-shield"/></svg>本地处理 · 照片不离开设备</div>
+        <div class="top-actions">
+          <button class="icon-btn" title="语言"><svg class="i"><use href="#i-translate"/></svg></button>
+          <button class="icon-btn" title="外观"><svg class="i"><use href="#i-sun"/></svg></button>
+          <button class="btn btn-secondary"><svg class="i"><use href="#i-image"/></svg>导入照片</button>
+          <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出作品</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <aside class="pane library">
+          <div class="pane-head">
+            <div class="pane-title">照片库<span class="count">04</span></div>
+            <div class="pane-head-actions">
+              <button class="icon-btn" title="清空"><svg class="i"><use href="#i-trash"/></svg></button>
+              <button class="icon-btn" title="导入"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="photo-list">
+            <div class="photo-row">
+              <span class="photo-index">01</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858392873413_DSC_2441_Gold_200_Portra_Endura3.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2441_Gold_200_Portra…</div><div class="photo-meta">2600 × 1733 · Nikon Z f</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row selected">
+              <span class="photo-index">02</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858395440461_DSC_2435_Gold_200_Portra_Endura.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2435_Gold_200_Portra…</div><div class="photo-meta">2600 × 1733 · Fujifilm GFX100RF</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row">
+              <span class="photo-index">03</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858398256024_DSC_2492_Portra_400_Supra_Endura.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2492_Portra_400_Supra…</div><div class="photo-meta">2600 × 1733 · Canon EOS R8</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row">
+              <span class="photo-index">04</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858401095920_DSC_2480_Ektachrome_100_Scan.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2480_Ektachrome_100…</div><div class="photo-meta">2600 × 1733 · Canon EOS 6D</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+          <div class="library-foot"><svg class="i"><use href="#i-plus"/></svg>拖入照片或文件夹</div>
+        </aside>
+
+        <main class="pane stage-pane">
+          <div class="pane-head">
+            <div class="pane-title"><span class="live-dot"></span>预览</div>
+            <span class="dim">完整照片 · 2160 × 2880</span>
+          </div>
+          <div class="stage-body">
+            <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+            <img class="print" src="../../dist/GearLab-Flutter-Windows-1.0/exports/GearLab_02_DSC_2435_Gold_200_Portra_Endura_GFX100RF.jpg" alt="作品预览">
+          </div>
+          <div class="stage-foot">
+            <span>02 / 04</span><span class="sep">·</span><span>DSC_2435_Gold_200_Portra_Endura</span>
+            <span class="right">上下 1:1</span><span class="sep">·</span><span>JPG</span><span class="sep">·</span><span>2160 PX</span>
+          </div>
+        </main>
+
+        <aside class="pane inspector">
+          <div class="pane-head inspector-head">
+            <div class="pane-title">版面</div>
+            <div class="sync"><span>同步全部</span><span class="switch"></span></div>
+            <button class="icon-btn" title="重置"><svg class="i"><use href="#i-reset"/></svg></button>
+          </div>
+          <div class="inspector-scroll">
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机模板</span><span class="section-meta">37 款</span></div>
+              <div class="camera-strip">
+                <div class="camera-card selected">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-gfx100rf.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">GFX100RF</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/ricoh-gr4.png" alt=""></div>
+                  <div class="camera-brand">RICOH</div><div class="camera-model">GR IV</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-x100vi-silver.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">X100VI</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-xm5-silver.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">X-M5</div>
+                </div>
+              </div>
+              <div class="camera-nav">
+                <button class="icon-btn"><svg class="i"><use href="#i-chev-l"/></svg></button>
+                <span class="camera-hint">左右滑动浏览</span>
+                <button class="icon-btn"><svg class="i"><use href="#i-chev-r"/></svg></button>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">标题与文字</span><span class="section-meta">标题自动选择深色或浅色</span></div>
+              <div class="field-row">
+                <span class="field-label">标题</span>
+                <div class="input">Fujifilm GFX100RF</div>
+                <div class="field-switch"><span>显示</span><span class="switch"></span></div>
+              </div>
+              <div class="field-row" style="margin-top:7px">
+                <div class="input placeholder" style="width:100%">地点 · 日期 · 一句话（可选）</div>
+              </div>
+              <div class="helper">留空时使用相机型号作为标题。标题最多 80 字。</div>
+            </section>
+
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">版面</span></div>
+              <div class="meta-rows">
+                <div class="meta-row"><span class="k">照片比例</span><span class="v">跟随原图</span></div>
+                <div class="meta-row"><span class="k">版面分配</span><span class="v">上下 1:1</span></div>
+              </div>
+              <div class="slider-row">
+                <div class="slider-top"><span>相机大小</span><span class="v">50%</span></div>
+                <div class="track"><span class="fill"></span><span class="knob"></span></div>
+                <div class="helper">照片完整不裁切，隐藏标题也保持上下 1:1。</div>
+              </div>
+            </section>
+
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机背景</span><span class="section-meta"><span class="hex-chip"><span class="hex-dot"></span>#FFFFFF</span></span></div>
+              <div class="swatches">
+                <span class="swatch selected" style="background:#FFFFFF"></span>
+                <span class="swatch" style="background:#F3EEE4"></span>
+                <span class="swatch" style="background:#EDE4D8"></span>
+                <span class="swatch" style="background:#E2E8EE"></span>
+                <span class="swatch" style="background:#E3E8DF"></span>
+                <span class="swatch" style="background:#F1E6E3"></span>
+                <span class="swatch" style="background:#D8D2C8"></span>
+                <span class="swatch" style="background:#393B3D"></span>
+              </div>
+              <div class="helper">只影响上半幅，标题会自动选择深色或浅色。</div>
+            </section>
+
+            <section class="section" style="border-bottom:0">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机屏幕</span></div>
+              <div class="screen-row">
+                <div class="segmented">
+                  <div class="segment selected">填满</div>
+                  <div class="segment">完整</div>
+                </div>
+                <div class="glare"><span>反光</span><span class="switch off"></span></div>
+              </div>
+              <div class="helper">填满时照片铺满屏幕；完整时保留屏幕黑边。</div>
+            </section>
+          </div>
+          <div class="export-bar">
+            <button class="btn btn-secondary">导出当前</button>
+            <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出全部 4 张</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <span class="board-label">Desktop · Light table</span>
+  </div>
+
+  <!-- ================= DESKTOP DARK ================= -->
+  <div class="device desktop theme-dark" id="desktop-dark">
+    <div class="app">
+      <div class="topbar">
+        <div class="brand">
+          <img class="logo" src="../../flutter_app/assets/app_icon.png" alt="GearLab" />
+          <span class="wordmark">GEARLAB</span>
+          <span class="brand-cn">器材研究所</span>
+        </div>
+        <div class="topbar-note"><svg class="i"><use href="#i-shield"/></svg>本地处理 · 照片不离开设备</div>
+        <div class="top-actions">
+          <button class="icon-btn" title="语言"><svg class="i"><use href="#i-translate"/></svg></button>
+          <button class="icon-btn" title="外观"><svg class="i"><use href="#i-moon"/></svg></button>
+          <button class="btn btn-secondary"><svg class="i"><use href="#i-image"/></svg>导入照片</button>
+          <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出作品</button>
+        </div>
+      </div>
+      <div class="workspace">
+        <aside class="pane library">
+          <div class="pane-head">
+            <div class="pane-title">照片库<span class="count">04</span></div>
+            <div class="pane-head-actions">
+              <button class="icon-btn" title="清空"><svg class="i"><use href="#i-trash"/></svg></button>
+              <button class="icon-btn" title="导入"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="photo-list">
+            <div class="photo-row">
+              <span class="photo-index">01</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858392873413_DSC_2441_Gold_200_Portra_Endura3.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2441_Gold_200_Portra…</div><div class="photo-meta">2600 × 1733 · Nikon Z f</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row selected">
+              <span class="photo-index">02</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858395440461_DSC_2435_Gold_200_Portra_Endura.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2435_Gold_200_Portra…</div><div class="photo-meta">2600 × 1733 · Fujifilm GFX100RF</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row">
+              <span class="photo-index">03</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858398256024_DSC_2492_Portra_400_Supra_Endura.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2492_Portra_400_Supra…</div><div class="photo-meta">2600 × 1733 · Canon EOS R8</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+            <div class="photo-row">
+              <span class="photo-index">04</span>
+              <img class="thumb" src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858401095920_DSC_2480_Ektachrome_100_Scan.jpg" alt="">
+              <div class="photo-copy"><div class="photo-name">DSC_2480_Ektachrome_100…</div><div class="photo-meta">2600 × 1733 · Canon EOS 6D</div></div>
+              <button class="row-x"><svg class="i"><use href="#i-x"/></svg></button>
+            </div>
+          </div>
+          <div class="library-foot"><svg class="i"><use href="#i-plus"/></svg>拖入照片或文件夹</div>
+        </aside>
+        <main class="pane stage-pane">
+          <div class="pane-head">
+            <div class="pane-title"><span class="live-dot"></span>预览</div>
+            <span class="dim">完整照片 · 2160 × 2880</span>
+          </div>
+          <div class="stage-body">
+            <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+            <img class="print" src="../../dist/GearLab-Flutter-Windows-1.0/exports/GearLab_02_DSC_2435_Gold_200_Portra_Endura_GFX100RF.jpg" alt="作品预览">
+          </div>
+          <div class="stage-foot">
+            <span>02 / 04</span><span class="sep">·</span><span>DSC_2435_Gold_200_Portra_Endura</span>
+            <span class="right">上下 1:1</span><span class="sep">·</span><span>JPG</span><span class="sep">·</span><span>2160 PX</span>
+          </div>
+        </main>
+        <aside class="pane inspector">
+          <div class="pane-head inspector-head">
+            <div class="pane-title">版面</div>
+            <div class="sync"><span>同步全部</span><span class="switch"></span></div>
+            <button class="icon-btn" title="重置"><svg class="i"><use href="#i-reset"/></svg></button>
+          </div>
+          <div class="inspector-scroll">
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机模板</span><span class="section-meta">37 款</span></div>
+              <div class="camera-strip">
+                <div class="camera-card selected">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-gfx100rf.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">GFX100RF</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/ricoh-gr4.png" alt=""></div>
+                  <div class="camera-brand">RICOH</div><div class="camera-model">GR IV</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-x100vi-silver.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">X100VI</div>
+                </div>
+                <div class="camera-card">
+                  <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-xm5-silver.png" alt=""></div>
+                  <div class="camera-brand">FUJIFILM</div><div class="camera-model">X-M5</div>
+                </div>
+              </div>
+              <div class="camera-nav">
+                <button class="icon-btn"><svg class="i"><use href="#i-chev-l"/></svg></button>
+                <span class="camera-hint">左右滑动浏览</span>
+                <button class="icon-btn"><svg class="i"><use href="#i-chev-r"/></svg></button>
+              </div>
+            </section>
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">标题与文字</span><span class="section-meta">标题自动选择深色或浅色</span></div>
+              <div class="field-row">
+                <span class="field-label">标题</span>
+                <div class="input">Fujifilm GFX100RF</div>
+                <div class="field-switch"><span>显示</span><span class="switch"></span></div>
+              </div>
+              <div class="field-row" style="margin-top:7px"><div class="input placeholder" style="width:100%">地点 · 日期 · 一句话（可选）</div></div>
+              <div class="helper">留空时使用相机型号作为标题。标题最多 80 字。</div>
+            </section>
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">版面</span></div>
+              <div class="meta-rows">
+                <div class="meta-row"><span class="k">照片比例</span><span class="v">跟随原图</span></div>
+                <div class="meta-row"><span class="k">版面分配</span><span class="v">上下 1:1</span></div>
+              </div>
+              <div class="slider-row">
+                <div class="slider-top"><span>相机大小</span><span class="v">50%</span></div>
+                <div class="track"><span class="fill"></span><span class="knob"></span></div>
+                <div class="helper">照片完整不裁切，隐藏标题也保持上下 1:1。</div>
+              </div>
+            </section>
+            <section class="section">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机背景</span><span class="section-meta"><span class="hex-chip"><span class="hex-dot"></span>#FFFFFF</span></span></div>
+              <div class="swatches">
+                <span class="swatch selected" style="background:#FFFFFF"></span>
+                <span class="swatch" style="background:#F3EEE4"></span>
+                <span class="swatch" style="background:#EDE4D8"></span>
+                <span class="swatch" style="background:#E2E8EE"></span>
+                <span class="swatch" style="background:#E3E8DF"></span>
+                <span class="swatch" style="background:#F1E6E3"></span>
+                <span class="swatch" style="background:#D8D2C8"></span>
+                <span class="swatch" style="background:#393B3D"></span>
+              </div>
+              <div class="helper">只影响上半幅，标题会自动选择深色或浅色。</div>
+            </section>
+            <section class="section" style="border-bottom:0">
+              <div class="section-head"><span class="section-mark"></span><span class="section-title">相机屏幕</span></div>
+              <div class="screen-row">
+                <div class="segmented"><div class="segment selected">填满</div><div class="segment">完整</div></div>
+                <div class="glare"><span>反光</span><span class="switch off"></span></div>
+              </div>
+              <div class="helper">填满时照片铺满屏幕；完整时保留屏幕黑边。</div>
+            </section>
+          </div>
+          <div class="export-bar">
+            <button class="btn btn-secondary">导出当前</button>
+            <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出全部 4 张</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <span class="board-label">Desktop · Darkroom</span>
+  </div>
+
+  <!-- ================= MOBILE LIGHT ================= -->
+  <div class="device mobile theme-light" id="mobile-light">
+    <div class="app">
+      <div class="statusbar"><span>9:41</span><span class="right"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="battery"></span></span></div>
+      <div class="topbar">
+        <div class="brand"><img class="logo" src="../../flutter_app/assets/app_icon.png" alt=""><span class="wordmark">GEARLAB</span></div>
+        <div class="top-actions">
+          <button class="icon-btn"><svg class="i"><use href="#i-image"/></svg></button>
+          <button class="icon-btn"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+      </div>
+      <div class="preview-wrap">
+        <div class="pane-head stage-head">
+          <div class="pane-title"><span class="live-dot"></span>预览</div>
+          <span class="dim">2160 × 2880</span>
+        </div>
+        <div class="stage-body">
+          <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+          <img class="print" src="../../dist/GearLab-Flutter-Windows-1.0/exports/GearLab_02_DSC_2435_Gold_200_Portra_Endura_GFX100RF.jpg" alt="">
+        </div>
+      </div>
+      <div class="library-strip">
+        <div class="pane-head">
+          <div class="pane-title">照片库<span class="count">04</span></div>
+          <div class="pane-head-actions"><button class="icon-btn"><svg class="i"><use href="#i-plus"/></svg></button></div>
+        </div>
+        <div class="strip-list">
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858392873413_DSC_2441_Gold_200_Portra_Endura3.jpg" alt=""><span class="strip-index">01</span></div>
+          <div class="strip-card selected"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858395440461_DSC_2435_Gold_200_Portra_Endura.jpg" alt=""><span class="strip-index">02</span></div>
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858398256024_DSC_2492_Portra_400_Supra_Endura.jpg" alt=""><span class="strip-index">03</span></div>
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858401095920_DSC_2480_Ektachrome_100_Scan.jpg" alt=""><span class="strip-index">04</span></div>
+        </div>
+      </div>
+      <div class="mobile-tools">
+        <span class="title">版面设置</span>
+        <span class="sync">同步全部</span><span class="switch on" style="width:27px;height:15px"></span>
+        <button class="icon-btn" title="重置"><svg class="i"><use href="#i-reset"/></svg></button>
+      </div>
+      <div class="tabs">
+        <div class="tab active">相机</div><div class="tab">文字</div><div class="tab">版面</div><div class="tab">背景</div><div class="tab">屏幕</div>
+      </div>
+      <div class="mobile-content">
+        <section class="section">
+          <div class="section-head"><span class="section-mark"></span><span class="section-title">相机模板</span><span class="section-meta">37 款</span></div>
+          <div class="camera-strip">
+            <div class="camera-card selected">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-gfx100rf.png" alt=""></div>
+              <div class="camera-brand">FUJIFILM</div><div class="camera-model">GFX100RF</div>
+            </div>
+            <div class="camera-card">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/ricoh-gr4.png" alt=""></div>
+              <div class="camera-brand">RICOH</div><div class="camera-model">GR IV</div>
+            </div>
+            <div class="camera-card">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-x100vi-silver.png" alt=""></div>
+              <div class="camera-brand">FUJIFILM</div><div class="camera-model">X100VI</div>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><span class="section-mark"></span><span class="section-title">标题</span></div>
+          <div class="input">Fujifilm GFX100RF</div>
+          <div class="input placeholder" style="margin-top:7px">地点 · 日期 · 一句话（可选）</div>
+        </section>
+      </div>
+      <div class="export-bar">
+        <button class="btn btn-secondary">导出当前</button>
+        <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出 4 张作品</button>
+      </div>
+    </div>
+    <span class="board-label">Mobile · Light</span>
+  </div>
+
+  <!-- ================= MOBILE DARK ================= -->
+  <div class="device mobile theme-dark" id="mobile-dark">
+    <div class="app">
+      <div class="statusbar"><span>9:41</span><span class="right"><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="battery"></span></span></div>
+      <div class="topbar">
+        <div class="brand"><img class="logo" src="../../flutter_app/assets/app_icon.png" alt=""><span class="wordmark">GEARLAB</span></div>
+        <div class="top-actions">
+          <button class="icon-btn"><svg class="i"><use href="#i-image"/></svg></button>
+          <button class="icon-btn"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+      </div>
+      <div class="preview-wrap">
+        <div class="pane-head stage-head">
+          <div class="pane-title"><span class="live-dot"></span>预览</div>
+          <span class="dim">2160 × 2880</span>
+        </div>
+        <div class="stage-body">
+          <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+          <img class="print" src="../../dist/GearLab-Flutter-Windows-1.0/exports/GearLab_02_DSC_2435_Gold_200_Portra_Endura_GFX100RF.jpg" alt="">
+        </div>
+      </div>
+      <div class="library-strip">
+        <div class="pane-head">
+          <div class="pane-title">照片库<span class="count">04</span></div>
+          <div class="pane-head-actions"><button class="icon-btn"><svg class="i"><use href="#i-plus"/></svg></button></div>
+        </div>
+        <div class="strip-list">
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858392873413_DSC_2441_Gold_200_Portra_Endura3.jpg" alt=""><span class="strip-index">01</span></div>
+          <div class="strip-card selected"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858395440461_DSC_2435_Gold_200_Portra_Endura.jpg" alt=""><span class="strip-index">02</span></div>
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858398256024_DSC_2492_Portra_400_Supra_Endura.jpg" alt=""><span class="strip-index">03</span></div>
+          <div class="strip-card"><img src="../../dist/GearLab-Flutter-Windows-1.0/GearLab-Windows-1.0/userdata/photos/1795858401095920_DSC_2480_Ektachrome_100_Scan.jpg" alt=""><span class="strip-index">04</span></div>
+        </div>
+      </div>
+      <div class="mobile-tools">
+        <span class="title">版面设置</span>
+        <span class="sync">同步全部</span><span class="switch on" style="width:27px;height:15px"></span>
+        <button class="icon-btn" title="重置"><svg class="i"><use href="#i-reset"/></svg></button>
+      </div>
+      <div class="tabs">
+        <div class="tab active">相机</div><div class="tab">文字</div><div class="tab">版面</div><div class="tab">背景</div><div class="tab">屏幕</div>
+      </div>
+      <div class="mobile-content">
+        <section class="section">
+          <div class="section-head"><span class="section-mark"></span><span class="section-title">相机模板</span><span class="section-meta">37 款</span></div>
+          <div class="camera-strip">
+            <div class="camera-card selected">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-gfx100rf.png" alt=""></div>
+              <div class="camera-brand">FUJIFILM</div><div class="camera-model">GFX100RF</div>
+            </div>
+            <div class="camera-card">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/ricoh-gr4.png" alt=""></div>
+              <div class="camera-brand">RICOH</div><div class="camera-model">GR IV</div>
+            </div>
+            <div class="camera-card">
+              <div class="camera-img-wrap"><img class="camera-img" src="../../flutter_app/assets/cameras/fujifilm-x100vi-silver.png" alt=""></div>
+              <div class="camera-brand">FUJIFILM</div><div class="camera-model">X100VI</div>
+            </div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><span class="section-mark"></span><span class="section-title">标题</span></div>
+          <div class="input">Fujifilm GFX100RF</div>
+          <div class="input placeholder" style="margin-top:7px">地点 · 日期 · 一句话（可选）</div>
+        </section>
+      </div>
+      <div class="export-bar">
+        <button class="btn btn-secondary">导出当前</button>
+        <button class="btn btn-primary"><svg class="i"><use href="#i-download"/></svg>导出 4 张作品</button>
+      </div>
+    </div>
+    <span class="board-label">Mobile · Dark</span>
+  </div>
+</div>
+</body>
+</html>

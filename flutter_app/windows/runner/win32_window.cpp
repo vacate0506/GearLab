@@ -149,8 +149,21 @@ bool Win32Window::Create(const std::wstring& title,
   return OnCreate();
 }
 
+void Win32Window::SetPreferredDarkMode(std::optional<bool> dark) {
+  preferred_dark_mode_ = dark;
+  if (window_handle_ != nullptr) {
+    UpdateTheme(window_handle_);
+  }
+}
+
 bool Win32Window::Show() {
-  return ShowWindow(window_handle_, SW_SHOWNORMAL);
+  const bool shown = ShowWindow(window_handle_, SW_SHOWNORMAL);
+  // DWM can ignore the immersive-dark attribute while the window is hidden,
+  // so apply the app's explicit theme again once it is visible.
+  if (window_handle_ != nullptr && preferred_dark_mode_.has_value()) {
+    UpdateTheme(window_handle_);
+  }
+  return shown;
 }
 
 // static
@@ -214,7 +227,7 @@ Win32Window::MessageHandler(HWND hwnd,
       return 0;
 
     case WM_DWMCOLORIZATIONCOLORCHANGED:
-      UpdateTheme(hwnd);
+      GetThisFromHandle(hwnd)->UpdateTheme(hwnd);
       return 0;
   }
 
@@ -273,16 +286,29 @@ void Win32Window::OnDestroy() {
 }
 
 void Win32Window::UpdateTheme(HWND const window) {
-  DWORD light_mode;
-  DWORD light_mode_size = sizeof(light_mode);
-  LSTATUS result = RegGetValue(HKEY_CURRENT_USER, kGetPreferredBrightnessRegKey,
-                               kGetPreferredBrightnessRegValue,
-                               RRF_RT_REG_DWORD, nullptr, &light_mode,
-                               &light_mode_size);
+  BOOL enable_dark_mode = FALSE;
+  if (preferred_dark_mode_.has_value()) {
+    enable_dark_mode = preferred_dark_mode_.value() ? TRUE : FALSE;
+  } else {
+    DWORD light_mode;
+    DWORD light_mode_size = sizeof(light_mode);
+    LSTATUS result = RegGetValue(HKEY_CURRENT_USER, kGetPreferredBrightnessRegKey,
+                                 kGetPreferredBrightnessRegValue,
+                                 RRF_RT_REG_DWORD, nullptr, &light_mode,
+                                 &light_mode_size);
 
-  if (result == ERROR_SUCCESS) {
-    BOOL enable_dark_mode = light_mode == 0;
-    DwmSetWindowAttribute(window, DWMWA_USE_IMMERSIVE_DARK_MODE,
-                          &enable_dark_mode, sizeof(enable_dark_mode));
+    if (result != ERROR_SUCCESS) {
+      return;
+    }
+    enable_dark_mode = light_mode == 0;
+  }
+  HRESULT hr = DwmSetWindowAttribute(window, DWMWA_USE_IMMERSIVE_DARK_MODE,
+                                     &enable_dark_mode, sizeof(enable_dark_mode));
+  if (SUCCEEDED(hr)) {
+    // Force the non-client frame to repaint even when the window is not the
+    // foreground window yet.
+    ::SetWindowPos(window, nullptr, 0, 0, 0, 0,
+                   SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+                       SWP_NOACTIVATE);
   }
 }

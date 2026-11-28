@@ -16,7 +16,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+# build-name 用作 Windows 的文件版本；Android 的显示版本在 app/build.gradle.kts 里
+# 固定为 "1.1"。+1001000 是 Android 的 versionCode，规则是
+# `1_000_000 + 次版本*1000 + 修订号`（1.0.0 → 1000000，1.1.0 → 1001000，
+# 1.1.1 → 1001001）。Android 只允许「新包 code 大于已装包」才覆盖安装，
+# 线上 v1.0 包的 code 是 1，这个号段足够宽。
+version: 1.1.0+1001000
 
 environment:
   sdk: ^3.14.0
@@ -30,6 +35,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.3
   material_ui: ^1.1.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -63,6 +71,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/app_icon.png

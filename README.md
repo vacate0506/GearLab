@@ -4,7 +4,7 @@
 
 GearLab 是一个本地运行的相机排版工具。选择相机模板、导入照片，它会生成一张「器材 + 成片」的作品图：上方是相机与屏幕里的照片，下方是完整成片。上下严格 1:1，照片不裁切、不拉伸、不留白边。
 
-当前版本 **1.0**，提供 **Windows** 与 **Android** 两个平台。所有处理都在本机完成，不联网、不上传、不需要账号。
+当前版本 **1.1**，提供 **Windows** 与 **Android** 两个平台。所有处理都在本机完成，不联网、不上传、不需要账号。
 
 ![Windows](docs/examples/00_contact_sheet_wide.png)
 
@@ -27,11 +27,12 @@ GearLab 是一个本地运行的相机排版工具。选择相机模板、导入
 
 | 平台 | 安装包 |
 |---|---|
-| Windows | [GearLab-Flutter-Windows-1.0.zip](https://github.com/vacate0506/GearLab/releases/download/v1.0/GearLab-Flutter-Windows-1.0.zip) |
-| Android | [GearLab-Android-1.0.apk](https://github.com/vacate0506/GearLab/releases/download/v1.0/GearLab-Android-1.0.apk)（Android 7.0 / API 24+） ||
+| Windows | [GearLab-Flutter-Windows-1.1.zip](https://github.com/vacate0506/GearLab/releases/download/v1.1/GearLab-Flutter-Windows-1.1.zip) |
+| Android | [GearLab-Android-1.1.apk](https://github.com/vacate0506/GearLab/releases/download/v1.1/GearLab-Android-1.1.apk)（Android 7.0 / API 24+） ||
 
-- Windows：解压后保留 `GearLab-Windows-1.0` 文件夹，运行其中的 `GearLab.exe`。
+- Windows：解压后保留 `GearLab-Windows-1.1` 文件夹，运行其中的 `GearLab.exe`。
 - Android：APK 为 release 构建、调试签名，可直接安装测试；正式分发前请替换为正式签名。
+- 版本号：`pubspec.yaml` 里是 `1.1.0+1001000`。前面的 `1.1.0` 是显示用的版本，后面的 `1001000` 是 Android 的 versionCode，规则 `1000000 + 次版本×1000 + 修订号`。Android 只允许「新包 versionCode 大于已装包」才覆盖安装，所以号段刻意起得很高（线上 v1.0 包是 1）。下次发 1.1.1 用 `1.1.1+1001001`。
 
 ## 功能
 
@@ -81,7 +82,7 @@ GearLab 是一个本地运行的相机排版工具。选择相机模板、导入
 - 主窗口每次启动自动居中。
 - 相机模板条支持左右箭头、鼠标滚轮和拖动浏览。
 - 支持拖拽文件/文件夹导入。
-- 导出目录固定为解压目录下、与 `GearLab-Windows-1.0` 同级的 `exports/`。
+- 导出目录固定为解压目录下、与 `GearLab-Windows-1.1` 同级的 `exports/`。
 - 编辑状态保存在应用目录的 `userdata/`。
 
 ### Android

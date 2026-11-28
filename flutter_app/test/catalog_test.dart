@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:gearlab/catalog.dart';
+import 'package:gearlab/domain/catalog.dart';
 
 void main() {
   test('catalog contains the original and back-view templates', () {

@@ -1,2 +1,10 @@
 .idea
 dist
+
+# 本地截图、打包副本、素材加工中间产物（不入库）
+_shots/
+_dist/
+_tmp_cameras/
+
+# 应用导出的作品
+flutter_app/exports/
