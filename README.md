@@ -38,9 +38,9 @@ GearLab 是一个本地运行的相机排版工具。选择相机模板、导入
 
 ## 相机模板
 
-内置 **11 款**机身模板，支持「填充 / 完整」两种显示方式；屏幕反光默认关闭。相机大小可调，默认 50%
+内置 **37 款**机身模板，涵盖 Ricoh、Fujifilm、Nikon、Canon、Sony 与 Lumix；支持「填充 / 完整」两种显示方式，屏幕照片默认四周保留统一内边距（Sony α7C II、Lumix S9 保持原屏幕满幅显示），屏幕反光默认关闭。相机大小可调，默认 50%
 
-![11 款相机模板](docs/examples/camera-lineup.jpg)
+![相机模板示例](docs/examples/camera-lineup.jpg)
 
 ### 版式与文字
 

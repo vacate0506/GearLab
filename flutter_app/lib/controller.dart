@@ -38,9 +38,12 @@ class GearLabController extends ChangeNotifier {
   CameraTemplate get template => CameraCatalog.find(currentStyle.cameraId);
 
   PhotoItem? get selectedPhoto =>
-      selectedIndex >= 0 && selectedIndex < photos.length ? photos[selectedIndex] : null;
+      selectedIndex >= 0 && selectedIndex < photos.length
+      ? photos[selectedIndex]
+      : null;
 
-  int get selectedCount => photos.where((PhotoItem item) => item.exportSelected).length;
+  int get selectedCount =>
+      photos.where((PhotoItem item) => item.exportSelected).length;
 
   ui.Image? get currentPhotoImage => selectedPhoto?.image;
 
@@ -103,12 +106,14 @@ class GearLabController extends ChangeNotifier {
       'selectedIndex': selectedIndex,
       'currentStyle': _styleToJson(currentStyle),
       'photos': photos
-          .map((PhotoItem photo) => <String, dynamic>{
-                'path': photo.path,
-                'name': photo.name,
-                'managed': photo.managed,
-                'style': _styleToJson(photo.style),
-              })
+          .map(
+            (PhotoItem photo) => <String, dynamic>{
+              'path': photo.path,
+              'name': photo.name,
+              'managed': photo.managed,
+              'style': _styleToJson(photo.style),
+            },
+          )
           .toList(),
     };
   }
@@ -133,13 +138,19 @@ class GearLabController extends ChangeNotifier {
     if (map['cameraId'] is String) {
       style.cameraId = CameraCatalog.find(map['cameraId'] as String).id;
     }
-    if (map['cameraScale'] is num) style.cameraScale = (map['cameraScale'] as num).toDouble();
+    if (map['cameraScale'] is num) {
+      style.cameraScale = (map['cameraScale'] as num).toDouble();
+    }
     if (map['showTitle'] is bool) style.showTitle = map['showTitle'] as bool;
     if (map['title'] is String) style.title = map['title'] as String;
     if (map['subtitle'] is String) style.subtitle = map['subtitle'] as String;
     if (map['screenFit'] == 'fit') style.screenFit = ScreenFitMode.fit;
-    if (map['screenGlare'] is bool) style.screenGlare = map['screenGlare'] as bool;
-    if (map['topColor'] is num) style.topColor = Color((map['topColor'] as num).toInt());
+    if (map['screenGlare'] is bool) {
+      style.screenGlare = map['screenGlare'] as bool;
+    }
+    if (map['topColor'] is num) {
+      style.topColor = Color((map['topColor'] as num).toInt());
+    }
     style.clamp();
     return style;
   }
@@ -196,14 +207,20 @@ class GearLabController extends ChangeNotifier {
           final String? path = rawPhoto['path'] as String?;
           if (path == null || !await File(path).exists()) continue;
           try {
-            final ui.Image image = await _decode(await File(path).readAsBytes());
+            final ui.Image image = await _decode(
+              await File(path).readAsBytes(),
+            );
             final PhotoItem photo = PhotoItem(
               path: path,
-              name: rawPhoto['name'] is String ? rawPhoto['name'] as String : p.basename(path),
+              name: rawPhoto['name'] is String
+                  ? rawPhoto['name'] as String
+                  : p.basename(path),
               image: image,
               style: _styleFromJson(rawPhoto['style']),
             );
-            photo.managed = rawPhoto['managed'] is bool ? rawPhoto['managed'] as bool : false;
+            photo.managed = rawPhoto['managed'] is bool
+                ? rawPhoto['managed'] as bool
+                : false;
             restored.add(photo);
           } catch (_) {
             // Skip missing or corrupt image files.
@@ -213,8 +230,9 @@ class GearLabController extends ChangeNotifier {
       photos
         ..clear()
         ..addAll(restored);
-      final int savedIndex =
-          state['selectedIndex'] is num ? (state['selectedIndex'] as num).toInt() : -1;
+      final int savedIndex = state['selectedIndex'] is num
+          ? (state['selectedIndex'] as num).toInt()
+          : -1;
       selectedIndex = photos.isEmpty
           ? -1
           : savedIndex.clamp(0, photos.length - 1).toInt();
@@ -274,12 +292,16 @@ class GearLabController extends ChangeNotifier {
     for (final String path in paths) {
       final Directory directory = Directory(path);
       if (directory.existsSync()) {
-        final List<File> found = directory
-            .listSync(recursive: true, followLinks: false)
-            .whereType<File>()
-            .where((File file) => _isSupportedImage(file.path))
-            .toList()
-          ..sort((File a, File b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
+        final List<File> found =
+            directory
+                .listSync(recursive: true, followLinks: false)
+                .whereType<File>()
+                .where((File file) => _isSupportedImage(file.path))
+                .toList()
+              ..sort(
+                (File a, File b) =>
+                    a.path.toLowerCase().compareTo(b.path.toLowerCase()),
+              );
         expanded.addAll(found.map((File file) => file.path));
       } else {
         expanded.add(path);
@@ -312,10 +334,16 @@ class GearLabController extends ChangeNotifier {
   }
 
   Future<ui.Image> _decode(Uint8List bytes) async {
-    final ui.ImmutableBuffer buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-    final ui.ImageDescriptor descriptor = await ui.ImageDescriptor.encoded(buffer);
+    final ui.ImmutableBuffer buffer = await ui.ImmutableBuffer.fromUint8List(
+      bytes,
+    );
+    final ui.ImageDescriptor descriptor = await ui.ImageDescriptor.encoded(
+      buffer,
+    );
     final int? targetWidth = descriptor.width > 2600 ? 2600 : null;
-    final ui.Codec codec = await descriptor.instantiateCodec(targetWidth: targetWidth);
+    final ui.Codec codec = await descriptor.instantiateCodec(
+      targetWidth: targetWidth,
+    );
     final ui.FrameInfo frame = await codec.getNextFrame();
     codec.dispose();
     descriptor.dispose();
@@ -342,7 +370,9 @@ class GearLabController extends ChangeNotifier {
     } else if (index < selectedIndex) {
       selectedIndex -= 1;
     }
-    if (!syncAll && selectedPhoto != null) currentStyle.copyFrom(selectedPhoto!.style);
+    if (!syncAll && selectedPhoto != null) {
+      currentStyle.copyFrom(selectedPhoto!.style);
+    }
     notifyListeners();
   }
 
@@ -475,7 +505,9 @@ class GearLabController extends ChangeNotifier {
       return preferred.path;
     } catch (_) {
       final Directory docs = await getApplicationDocumentsDirectory();
-      final Directory fallback = Directory(p.join(docs.path, 'GearLab', 'exports'));
+      final Directory fallback = Directory(
+        p.join(docs.path, 'GearLab', 'exports'),
+      );
       await fallback.create(recursive: true);
       return fallback.path;
     }
@@ -506,10 +538,12 @@ class GearLabController extends ChangeNotifier {
     try {
       final Directory directory = Directory(path);
       await directory.create(recursive: true);
-      final File probe = File(p.join(
-        directory.path,
-        '.gearlab-write-${DateTime.now().microsecondsSinceEpoch}',
-      ));
+      final File probe = File(
+        p.join(
+          directory.path,
+          '.gearlab-write-${DateTime.now().microsecondsSinceEpoch}',
+        ),
+      );
       await probe.writeAsString('ok', flush: true);
       await probe.delete();
       return true;
@@ -532,7 +566,9 @@ class GearLabController extends ChangeNotifier {
       }
     } else {
       for (final PhotoItem photo in photos) {
-        if (options.scope == ExportScope.selected && !photo.exportSelected) continue;
+        if (options.scope == ExportScope.selected && !photo.exportSelected) {
+          continue;
+        }
         jobs.add(_ExportJob(photo, photo.style.clone()));
       }
     }
@@ -574,8 +610,13 @@ class GearLabController extends ChangeNotifier {
       busyMessage = progress.message;
       notifyListeners();
       try {
-        final CameraTemplate cameraTemplate = CameraCatalog.find(job.style.cameraId);
-        final PosterPlan plan = PosterPlan.forWidth(options.width.toDouble(), job.photo.aspect);
+        final CameraTemplate cameraTemplate = CameraCatalog.find(
+          job.style.cameraId,
+        );
+        final PosterPlan plan = PosterPlan.forWidth(
+          options.width.toDouble(),
+          job.photo.aspect,
+        );
         final ui.Image rendered = await renderPoster(
           plan: plan,
           style: job.style,
@@ -583,16 +624,24 @@ class GearLabController extends ChangeNotifier {
           camera: CameraCatalog.images[cameraTemplate.id],
           photo: job.photo.image,
         );
-        final String extension = options.format == ExportFormat.jpg ? 'jpg' : 'png';
-        final String base = _safeName(p.basenameWithoutExtension(job.photo.name));
-        final String model = _safeName(cameraTemplate.model.replaceAll(' ', ''));
+        final String extension = options.format == ExportFormat.jpg
+            ? 'jpg'
+            : 'png';
+        final String base = _safeName(
+          p.basenameWithoutExtension(job.photo.name),
+        );
+        final String model = _safeName(
+          cameraTemplate.model.replaceAll(' ', ''),
+        );
         final String stem =
             'GearLab_${(i + 1).toString().padLeft(2, '0')}_${base}_$model';
         File targetFor(String folderPath) {
           File candidate = File(p.join(folderPath, '$stem.$extension'));
           int duplicate = 2;
           while (candidate.existsSync()) {
-            candidate = File(p.join(folderPath, '${stem}_$duplicate.$extension'));
+            candidate = File(
+              p.join(folderPath, '${stem}_$duplicate.$extension'),
+            );
             duplicate += 1;
           }
           return candidate;
@@ -600,11 +649,15 @@ class GearLabController extends ChangeNotifier {
 
         final Uint8List bytes;
         if (options.format == ExportFormat.png) {
-          final ByteData? data = await rendered.toByteData(format: ui.ImageByteFormat.png);
+          final ByteData? data = await rendered.toByteData(
+            format: ui.ImageByteFormat.png,
+          );
           if (data == null) throw StateError('PNG 编码失败');
           bytes = data.buffer.asUint8List();
         } else {
-          final ByteData? data = await rendered.toByteData(format: ui.ImageByteFormat.rawRgba);
+          final ByteData? data = await rendered.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          );
           if (data == null) throw StateError('像素读取失败');
           final Uint8List rgba = data.buffer.asUint8List();
           bytes = await compute(
@@ -618,7 +671,9 @@ class GearLabController extends ChangeNotifier {
         } catch (e) {
           if (Platform.isAndroid) rethrow;
           final String fallback = await defaultExportFolder();
-          if (fallback == activeFolder || !await _canWriteFolder(fallback)) rethrow;
+          if (fallback == activeFolder || !await _canWriteFolder(fallback)) {
+            rethrow;
+          }
           notice ??= '所选目录不可写，已改存到 $fallback';
           activeFolder = fallback;
           folder = Directory(activeFolder);
@@ -639,7 +694,11 @@ class GearLabController extends ChangeNotifier {
         errors.add('${job.photo.name}: $e');
       }
     }
-    progress = ExportProgress(done: jobs.length, total: jobs.length, message: '完成');
+    progress = ExportProgress(
+      done: jobs.length,
+      total: jobs.length,
+      message: '完成',
+    );
     busy = false;
     busyMessage = '';
     notifyListeners();
@@ -665,7 +724,14 @@ class GearLabController extends ChangeNotifier {
 
   static bool _isSupportedImage(String path) {
     final String ext = p.extension(path).toLowerCase();
-    return const <String>{'.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'}.contains(ext);
+    return const <String>{
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.bmp',
+      '.tif',
+      '.tiff',
+    }.contains(ext);
   }
 
   static String _safeName(String value) {

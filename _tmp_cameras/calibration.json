@@ -1,0 +1,427 @@
+{
+  "source": "D:\\ai_img\\新建文件夹 (2)\\背面展示",
+  "processed": "D:/ai/GearLab/_tmp_cameras/processed",
+  "note": "Pixel rectangles are [x,y,w,h] inside the processed transparent PNGs. Values marked manual were read from the 50px calibration grids; verify before shipping.",
+  "templates": [
+    {
+      "id": "canon-eos-6d",
+      "file": "canon-eos-6d-back.png",
+      "brand": "CANON",
+      "model": "EOS 6D",
+      "display": "Canon EOS 6D",
+      "width": 642,
+      "height": 499,
+      "screen": [
+        104,
+        227,
+        277,
+        191
+      ]
+    },
+    {
+      "id": "canon-eos-r5-mark-ii",
+      "file": "EOS R5 Mark II.jpg",
+      "brand": "CANON",
+      "model": "EOS R5 Mark II",
+      "display": "Canon EOS R5 Mark II",
+      "width": 536,
+      "height": 407,
+      "screen": [
+        69,
+        175,
+        272,
+        204
+      ]
+    },
+    {
+      "id": "canon-eos-r6-v",
+      "file": "EOS R6 V.jpg",
+      "brand": "CANON",
+      "model": "EOS R6 V",
+      "display": "Canon EOS R6 V",
+      "width": 517,
+      "height": 326,
+      "screen": [
+        66,
+        99,
+        245,
+        191
+      ]
+    },
+    {
+      "id": "canon-eos-r8-mark-ii",
+      "file": "EOS R8 Mark II.jpg",
+      "brand": "CANON",
+      "model": "EOS R8 Mark II",
+      "display": "Canon EOS R8 Mark II",
+      "width": 504,
+      "height": 353,
+      "screen": [
+        79,
+        151,
+        263,
+        176
+      ]
+    },
+    {
+      "id": "canon-eos-r5",
+      "file": "佳能r5.jpg",
+      "brand": "CANON",
+      "model": "EOS R5",
+      "display": "Canon EOS R5",
+      "width": 725,
+      "height": 535,
+      "screen": [
+        69,
+        219,
+        394,
+        291
+      ]
+    },
+    {
+      "id": "canon-eos-r6-mark-iii",
+      "file": "佳能r6iii.jpg",
+      "brand": "CANON",
+      "model": "EOS R6 Mark III",
+      "display": "Canon EOS R6 Mark III",
+      "width": 513,
+      "height": 383,
+      "screen": [
+        51,
+        169,
+        262,
+        192
+      ]
+    },
+    {
+      "id": "canon-eos-r8",
+      "file": "佳能r8.jpg",
+      "brand": "CANON",
+      "model": "EOS R8",
+      "display": "Canon EOS R8",
+      "width": 569,
+      "height": 393,
+      "screen": [
+        98,
+        178,
+        251,
+        167
+      ]
+    },
+    {
+      "id": "fujifilm-gfx100-ii",
+      "file": "Fujifilm GFX100 II.webp",
+      "brand": "FUJIFILM",
+      "model": "GFX100 II",
+      "display": "Fujifilm GFX100 II",
+      "width": 825,
+      "height": 660,
+      "screen": [
+        54,
+        304,
+        418,
+        293
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-gfx100rf",
+      "file": "Fujifilm GFX100RF.webp",
+      "brand": "FUJIFILM",
+      "model": "GFX100RF",
+      "display": "Fujifilm GFX100RF",
+      "width": 937,
+      "height": 581,
+      "screen": [
+        117,
+        207,
+        486,
+        334
+      ]
+    },
+    {
+      "id": "fujifilm-x-e5",
+      "file": "Fujifilm X-E5.webp",
+      "brand": "FUJIFILM",
+      "model": "X-E5",
+      "display": "Fujifilm X-E5",
+      "width": 921,
+      "height": 505,
+      "screen": [
+        75,
+        149,
+        530,
+        303
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-h2",
+      "file": "Fujifilm X-H2.webp",
+      "brand": "FUJIFILM",
+      "model": "X-H2",
+      "display": "Fujifilm X-H2",
+      "width": 939,
+      "height": 639,
+      "screen": [
+        105,
+        305,
+        497,
+        322
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-h2s",
+      "file": "Fujifilm X-H2S.webp",
+      "brand": "FUJIFILM",
+      "model": "X-H2S",
+      "display": "Fujifilm X-H2S",
+      "width": 923,
+      "height": 628,
+      "screen": [
+        106,
+        305,
+        493,
+        323
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-s10",
+      "file": "Fujifilm X-S10.webp",
+      "brand": "FUJIFILM",
+      "model": "X-S10",
+      "display": "Fujifilm X-S10",
+      "width": 953,
+      "height": 611,
+      "screen": [
+        110,
+        305,
+        535,
+        280
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-s20",
+      "file": "Fujifilm X-S20.webp",
+      "brand": "FUJIFILM",
+      "model": "X-S20",
+      "display": "Fujifilm X-S20",
+      "width": 1089,
+      "height": 707,
+      "screen": [
+        188,
+        305,
+        522,
+        340
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-t30-iii",
+      "file": "Fujifilm X-T30 III.webp",
+      "brand": "FUJIFILM",
+      "model": "X-T30 III",
+      "display": "Fujifilm X-T30 III",
+      "width": 921,
+      "height": 593,
+      "screen": [
+        106,
+        245,
+        550,
+        320
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-t5",
+      "file": "Fujifilm X-T5.webp",
+      "brand": "FUJIFILM",
+      "model": "X-T5",
+      "display": "Fujifilm X-T5",
+      "width": 997,
+      "height": 655,
+      "screen": [
+        110,
+        305,
+        535,
+        330
+      ],
+      "manual": true
+    },
+    {
+      "id": "fujifilm-x-t50",
+      "file": "Fujifilm X-T50.webp",
+      "brand": "FUJIFILM",
+      "model": "X-T50",
+      "display": "Fujifilm X-T50",
+      "width": 923,
+      "height": 602,
+      "screen": [
+        120,
+        225,
+        530,
+        345
+      ],
+      "manual": true
+    },
+    {
+      "id": "nikon-fe",
+      "file": "nikon-fe-back.png",
+      "brand": "NIKON",
+      "model": "FE",
+      "display": "Nikon FE",
+      "width": 642,
+      "height": 422,
+      "screen": [
+        206,
+        243,
+        152,
+        124
+      ],
+      "manual": true,
+      "note": "film camera; rectangle is the rear film door, no LCD"
+    },
+    {
+      "id": "nikon-z5ii",
+      "file": "z5iic.png",
+      "brand": "NIKON",
+      "model": "Z5II",
+      "display": "Nikon Z5II",
+      "width": 686,
+      "height": 410,
+      "screen": [
+        97,
+        124,
+        370,
+        276
+      ],
+      "manual": true,
+      "note": "duplicate model of existing nikon-z5ii; decide keep or replace"
+    },
+    {
+      "id": "nikon-z50ii",
+      "file": "尼康z50ii.png",
+      "brand": "NIKON",
+      "model": "Z50II",
+      "display": "Nikon Z50II",
+      "width": 686,
+      "height": 493,
+      "screen": [
+        98,
+        202,
+        380,
+        259
+      ]
+    },
+    {
+      "id": "nikon-zf",
+      "file": "尼康zf.png",
+      "brand": "NIKON",
+      "model": "Zf",
+      "display": "Nikon Zf",
+      "width": 686,
+      "height": 476,
+      "screen": [
+        90,
+        215,
+        342,
+        228
+      ]
+    },
+    {
+      "id": "nikon-zfc",
+      "file": "尼康zfc.png",
+      "brand": "NIKON",
+      "model": "Zfc",
+      "display": "Nikon Zfc",
+      "width": 672,
+      "height": 452,
+      "screen": [
+        100,
+        197,
+        333,
+        225
+      ]
+    },
+    {
+      "id": "lumix-s5ii",
+      "file": "panasonic-lumix-s5ii-back.png",
+      "brand": "LUMIX",
+      "model": "S5II",
+      "display": "Lumix S5II",
+      "width": 642,
+      "height": 490,
+      "screen": [
+        74,
+        240,
+        353,
+        228
+      ]
+    },
+    {
+      "id": "sony-a7-iv",
+      "file": "sony-a7m4-back.png",
+      "brand": "SONY",
+      "model": "α7 IV",
+      "display": "Sony α7 IV",
+      "width": 642,
+      "height": 450,
+      "screen": [
+        74,
+        186,
+        333,
+        218
+      ]
+    },
+    {
+      "id": "sony-zv-e10",
+      "file": "sony-zv-e10-back.png",
+      "brand": "SONY",
+      "model": "ZV-E10",
+      "display": "Sony ZV-E10",
+      "width": 639,
+      "height": 350,
+      "screen": [
+        85,
+        52,
+        358,
+        246
+      ],
+      "manual": true
+    },
+    {
+      "id": "nikon-z30",
+      "file": "尼康z30.png",
+      "brand": "NIKON",
+      "model": "Z30",
+      "display": "Nikon Z30",
+      "width": 678,
+      "height": 400,
+      "screen": [
+        55,
+        105,
+        405,
+        262
+      ]
+    },
+    {
+      "id": "nikon-z5ii-c",
+      "file": "z5iic.png",
+      "brand": "NIKON",
+      "model": "Z5II C",
+      "display": "Nikon Z5II C",
+      "width": 686,
+      "height": 410,
+      "screen": [
+        108,
+        122,
+        367,
+        256
+      ],
+      "manual": true
+    }
+  ]
+}

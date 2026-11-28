@@ -6,7 +6,11 @@ import 'package:material_ui/material_ui.dart';
 import 'models.dart';
 
 class PosterPlan {
-  const PosterPlan({required this.width, required this.height, required this.band});
+  const PosterPlan({
+    required this.width,
+    required this.height,
+    required this.band,
+  });
 
   final double width;
   final double height;
@@ -16,14 +20,19 @@ class PosterPlan {
     final int w = math.max(1, width.round());
     final double safeAspect = aspect.isFinite && aspect > 0.01 ? aspect : 1.5;
     final int band = math.max(1, (w / safeAspect).round());
-    return PosterPlan(width: w.toDouble(), height: (band * 2).toDouble(), band: band.toDouble());
+    return PosterPlan(
+      width: w.toDouble(),
+      height: (band * 2).toDouble(),
+      band: band.toDouble(),
+    );
   }
 
   double get aspect => width / height;
 }
 
-Color inkOn(Color background) =>
-    background.computeLuminance() > 0.56 ? const Color(0xFF16181A) : Colors.white;
+Color inkOn(Color background) => background.computeLuminance() > 0.56
+    ? const Color(0xFF16181A)
+    : Colors.white;
 
 Color mutedInkOn(Color background) => inkOn(background).withValues(alpha: 0.58);
 
@@ -82,11 +91,15 @@ void paintPoster(
   )..layout(maxWidth: w * 0.9);
 
   final double titleBlock = style.showTitle
-      ? titlePainter.height + (subtitle.isEmpty ? 0 : gap * 0.55 + subtitlePainter.height)
+      ? titlePainter.height +
+            (subtitle.isEmpty ? 0 : gap * 0.55 + subtitlePainter.height)
       : 0;
   final double topPadding = margin;
   final double titleReserve = style.showTitle ? titleBlock + gap * 1.2 : 0;
-  final double maxArtH = math.max(w * 0.12, band - topPadding * 2 - titleReserve);
+  final double maxArtH = math.max(
+    w * 0.12,
+    band - topPadding * 2 - titleReserve,
+  );
   double artW = w * style.cameraScale.clamp(0.34, 0.72);
   double artH = artW / math.max(0.1, template.aspect);
   if (artH > maxArtH) {
@@ -95,7 +108,8 @@ void paintPoster(
   }
 
   final double contentH = artH + titleReserve;
-  final double startY = topPadding + math.max(0, (band - topPadding * 2 - contentH) / 2);
+  final double startY =
+      topPadding + math.max(0, (band - topPadding * 2 - contentH) / 2);
   final Rect artRect = Rect.fromLTWH((w - artW) / 2, startY, artW, artH);
 
   // Soft studio shadow under the cutout.
@@ -108,7 +122,10 @@ void paintPoster(
     shadowRect,
     Paint()
       ..color = Colors.black.withValues(alpha: 0.22)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, math.max(1, artW * 0.018)),
+      ..maskFilter = MaskFilter.blur(
+        BlurStyle.normal,
+        math.max(1, artW * 0.018),
+      ),
   );
 
   if (camera != null) {
@@ -119,7 +136,10 @@ void paintPoster(
       Paint()..filterQuality = FilterQuality.high,
     );
   } else {
-    final RRect fallback = RRect.fromRectAndRadius(artRect, Radius.circular(artW * 0.02));
+    final RRect fallback = RRect.fromRectAndRadius(
+      artRect,
+      Radius.circular(artW * 0.02),
+    );
     canvas.drawRRect(fallback, Paint()..color = const Color(0xFF24262A));
     final TextPainter fallbackText = TextPainter(
       text: TextSpan(
@@ -130,7 +150,10 @@ void paintPoster(
     )..layout();
     fallbackText.paint(
       canvas,
-      Offset(artRect.center.dx - fallbackText.width / 2, artRect.center.dy - fallbackText.height / 2),
+      Offset(
+        artRect.center.dx - fallbackText.width / 2,
+        artRect.center.dy - fallbackText.height / 2,
+      ),
     );
   }
 
@@ -140,20 +163,39 @@ void paintPoster(
     template.screen.width * artW,
     template.screen.height * artH,
   );
-  final RRect screenRRect = RRect.fromRectAndRadius(screen, Radius.circular(artW * 0.006));
+  final RRect screenRRect = RRect.fromRectAndRadius(
+    screen,
+    Radius.circular(artW * 0.006),
+  );
   canvas.drawRRect(screenRRect, Paint()..color = Colors.black);
   canvas.save();
   canvas.clipRRect(screenRRect);
   if (photo != null) {
-    _drawScreenPhoto(canvas, photo, screen, style.screenFit);
+    // Most cameras get a border so the photo never runs into the bezel. A few
+    // models keep their original edge-to-edge screen fill.
+    final double inset =
+        math.min(screen.width, screen.height) * template.screenInset;
+    final Rect photoArea = inset <= 0
+        ? screen
+        : Rect.fromLTRB(
+            screen.left + inset,
+            screen.top + inset,
+            screen.right - inset,
+            screen.bottom - inset,
+          );
+    canvas.save();
+    canvas.clipRect(photoArea);
+    _drawScreenPhoto(canvas, photo, photoArea, style.screenFit);
+    canvas.restore();
   } else {
     canvas.drawRect(
       screen,
       Paint()
-        ..shader = ui.Gradient.linear(screen.topLeft, screen.bottomRight, <Color>[
-          const Color(0xFF1F2124),
-          const Color(0xFF0C0D0E),
-        ]),
+        ..shader = ui.Gradient.linear(
+          screen.topLeft,
+          screen.bottomRight,
+          <Color>[const Color(0xFF1F2124), const Color(0xFF0C0D0E)],
+        ),
     );
   }
   if (style.screenGlare) {
@@ -178,7 +220,10 @@ void paintPoster(
     if (subtitle.isNotEmpty) {
       subtitlePainter.paint(
         canvas,
-        Offset((w - subtitlePainter.width) / 2, titleY + titlePainter.height + gap * 0.55),
+        Offset(
+          (w - subtitlePainter.width) / 2,
+          titleY + titlePainter.height + gap * 0.55,
+        ),
       );
     }
   }
@@ -204,7 +249,12 @@ void paintPoster(
   }
 }
 
-void _drawScreenPhoto(Canvas canvas, ui.Image photo, Rect screen, ScreenFitMode mode) {
+void _drawScreenPhoto(
+  Canvas canvas,
+  ui.Image photo,
+  Rect screen,
+  ScreenFitMode mode,
+) {
   final double iw = photo.width.toDouble();
   final double ih = photo.height.toDouble();
   final double scale = mode == ScreenFitMode.fill
@@ -237,7 +287,10 @@ Future<ui.Image> renderPoster({
   final Canvas canvas = Canvas(recorder);
   paintPoster(canvas, plan, style, template, camera, photo);
   final ui.Picture picture = recorder.endRecording();
-  final ui.Image image = await picture.toImage(plan.width.round(), plan.height.round());
+  final ui.Image image = await picture.toImage(
+    plan.width.round(),
+    plan.height.round(),
+  );
   picture.dispose();
   return image;
 }

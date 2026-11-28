@@ -17,6 +17,7 @@ class CameraTemplate {
     required this.displayName,
     required this.aspect,
     required this.screen,
+    this.screenInset = 0.06,
   });
 
   final String id;
@@ -28,6 +29,10 @@ class CameraTemplate {
 
   /// Normalized screen rectangle inside the camera artwork.
   final Rect screen;
+
+  /// Fraction of the screen's short side kept as a border around the photo.
+  /// Zero restores the original edge-to-edge screen fill.
+  final double screenInset;
 }
 
 class StyleSettings {

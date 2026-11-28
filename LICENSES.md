@@ -1,4 +1,4 @@
-﻿# GearLab 授权与素材说明
+# GearLab 授权与素材说明
 
 ## 应用程序代码
 
@@ -14,7 +14,7 @@ GearLab 器材研究所 v1.0 — © 2026 GearLab Studio。
 
 ## 相机模板素材
 
-- 11 款模板（Ricoh GR IV、Fujifilm X100VI / X-M5、Nikon Z5II / Z6III / Z8 / ZR、Sony α7C II、Lumix S9）来自用户提供的模板照片。
+- 37 款模板来自用户提供的模板照片。原始 11 款包括 Ricoh GR IV、Fujifilm X100VI / X-M5、Nikon Z5II / Z6III / Z8 / ZR、Sony α7C II、Lumix S9；新增 26 款为 Canon、Fujifilm、Nikon、Sony 与 Lumix 的背视图（含 Nikon Z30 与 Z5II C）。
 - 处理方式：转换格式、按需抠除白底、裁切透明边界；仅用于本项目的界面合成与本地导出。
 - 屏幕区域为逐款标定的合成区域，不包含官方矢量插画或第三方图库素材。
 

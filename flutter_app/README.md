@@ -13,7 +13,7 @@ flutter_app/
   lib/
     main.dart         界面、导入/拖拽、设置、导出弹窗
     controller.dart   状态、图库、持久化、导出
-    catalog.dart      11 款相机模板与屏幕区域
+    catalog.dart      37 款相机模板与屏幕区域
     renderer.dart     预览/导出共用的 1:1 合成渲染
     models.dart       照片、样式、导出模型
   assets/
@@ -35,7 +35,7 @@ flutter_app/
 - 导入照片会复制到应用图库目录，关闭应用后恢复上次照片、选中项与全部样式。
 - Windows 状态与图库位于应用目录的 `userdata/`；Android 位于应用私有目录。
 
-相机模板屏幕坐标在 `lib/catalog.dart` 的 `screen` 字段中维护。X-M5 与 Nikon Z8 的屏幕位置在 1.0 中做过微调。
+相机模板屏幕坐标在 `lib/catalog.dart` 的 `screen` 字段中维护。X-M5、Nikon Z8 与 Z5II C 的屏幕位置在 1.0 中做过微调；照片默认在屏幕内四周保留统一的 6% 内边距，Sony α7C II 与 Lumix S9 保持原屏幕满幅显示。
 
 ## 构建
 

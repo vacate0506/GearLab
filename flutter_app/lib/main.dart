@@ -72,13 +72,18 @@ class GearLabApp extends StatelessWidget {
         trackColor: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
           return states.contains(WidgetState.selected) ? kAccent : kLine;
         }),
-        trackOutlineColor: const WidgetStatePropertyAll<Color>(Colors.transparent),
+        trackOutlineColor: const WidgetStatePropertyAll<Color>(
+          Colors.transparent,
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: kCardSoft,
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 11,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
@@ -209,10 +214,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         final bool android = Platform.isAndroid;
         return AlertDialog(
           backgroundColor: const Color(0xFF191B1D),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Row(
             children: <Widget>[
-              const Icon(Icons.check_circle, color: Color(0xFF7BC8A4), size: 22),
+              const Icon(
+                Icons.check_circle,
+                color: Color(0xFF7BC8A4),
+                size: 22,
+              ),
               const SizedBox(width: 8),
               Text(
                 android && result.gallerySaved > 0 ? '已保存到相册' : '导出完成',
@@ -236,14 +247,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   const SizedBox(height: 8),
                   SelectableText(
                     result.folder,
-                    style: const TextStyle(color: kMuted, fontSize: 14, height: 1.4),
+                    style: const TextStyle(
+                      color: kMuted,
+                      fontSize: 14,
+                      height: 1.4,
+                    ),
                   ),
                 ],
                 if (result.notice != null) ...<Widget>[
                   const SizedBox(height: 8),
                   Text(
                     result.notice!,
-                    style: const TextStyle(color: Color(0xFFE7BE78), fontSize: 14, height: 1.4),
+                    style: const TextStyle(
+                      color: Color(0xFFE7BE78),
+                      fontSize: 14,
+                      height: 1.4,
+                    ),
                   ),
                 ],
                 if (android && result.gallerySaved == 0) ...<Widget>[
@@ -257,7 +276,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   const SizedBox(height: 10),
                   Text(
                     '${result.errors.length} 张失败：${result.errors.first}',
-                    style: const TextStyle(color: Color(0xFFE09A8F), fontSize: 14),
+                    style: const TextStyle(
+                      color: Color(0xFFE09A8F),
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ],
@@ -286,7 +308,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void _toast(String text) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(text), duration: const Duration(seconds: 2)));
+      ..showSnackBar(
+        SnackBar(content: Text(text), duration: const Duration(seconds: 2)),
+      );
   }
 
   @override
@@ -297,14 +321,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         final bool desktop = MediaQuery.sizeOf(context).width >= 1000;
         final Widget page = CallbackShortcuts(
           bindings: <ShortcutActivator, VoidCallback>{
-            const SingleActivator(LogicalKeyboardKey.keyO, control: true): _import,
-            const SingleActivator(LogicalKeyboardKey.keyE, control: true): () => _openExport(),
-            const SingleActivator(LogicalKeyboardKey.keyS, control: true): () => _openExport(),
+            const SingleActivator(LogicalKeyboardKey.keyO, control: true):
+                _import,
+            const SingleActivator(LogicalKeyboardKey.keyE, control: true): () =>
+                _openExport(),
+            const SingleActivator(LogicalKeyboardKey.keyS, control: true): () =>
+                _openExport(),
             const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
               if (c.selectedIndex > 0) c.selectPhoto(c.selectedIndex - 1);
             },
             const SingleActivator(LogicalKeyboardKey.arrowRight): () {
-              if (c.selectedIndex >= 0 && c.selectedIndex < c.photos.length - 1) {
+              if (c.selectedIndex >= 0 &&
+                  c.selectedIndex < c.photos.length - 1) {
                 c.selectPhoto(c.selectedIndex + 1);
               }
             },
@@ -320,7 +348,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: Stack(
                   children: <Widget>[
                     desktop ? _buildDesktop() : _buildMobile(),
-                    if (c.busy) _ExportProgressOverlay(progress: c.progress, message: c.busyMessage),
+                    if (c.busy)
+                      _ExportProgressOverlay(
+                        progress: c.progress,
+                        message: c.busyMessage,
+                      ),
                   ],
                 ),
               ),
@@ -335,7 +367,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _buildDesktop() {
     return Column(
       children: <Widget>[
-        TopBar(controller: c, onImport: _import, onExport: () => _openExport(), desktop: true),
+        TopBar(
+          controller: c,
+          onImport: _import,
+          onExport: () => _openExport(),
+          desktop: true,
+        ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(18, 10, 14, 14),
@@ -347,13 +384,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   child: PhotoRail(controller: c, onImport: _import),
                 ),
                 const SizedBox(width: 12),
-                Expanded(child: PreviewPane(controller: c, onImport: _import)),
+                Expanded(
+                  child: PreviewPane(controller: c, onImport: _import),
+                ),
                 const SizedBox(width: 12),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width >= 1300 ? 468 : 420,
                   child: SettingsPanel(
                     controller: c,
-                    onExport: (ExportScope scope) => _openExport(initialScope: scope),
+                    onExport: (ExportScope scope) =>
+                        _openExport(initialScope: scope),
                     embedded: false,
                   ),
                 ),
@@ -368,7 +408,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _buildMobile() {
     return Column(
       children: <Widget>[
-        TopBar(controller: c, onImport: _import, onExport: () => _openExport(), desktop: false),
+        TopBar(
+          controller: c,
+          onImport: _import,
+          onExport: () => _openExport(),
+          desktop: false,
+        ),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 96),
@@ -377,7 +422,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               children: <Widget>[
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.48,
-                  child: PreviewPane(controller: c, onImport: _import, compact: true),
+                  child: PreviewPane(
+                    controller: c,
+                    onImport: _import,
+                    compact: true,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 SizedBox(
@@ -391,7 +440,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 const SizedBox(height: 12),
                 SettingsPanel(
                   controller: c,
-                  onExport: (ExportScope scope) => _openExport(initialScope: scope),
+                  onExport: (ExportScope scope) =>
+                      _openExport(initialScope: scope),
                   embedded: true,
                 ),
               ],
@@ -446,7 +496,11 @@ class TopBar extends StatelessWidget {
               if (desktop)
                 const Text(
                   '器材研究所  /  CAMERA STORY',
-                  style: TextStyle(color: kFaint, fontSize: 14, letterSpacing: 0.5),
+                  style: TextStyle(
+                    color: kFaint,
+                    fontSize: 14,
+                    letterSpacing: 0.5,
+                  ),
                 ),
             ],
           ),
@@ -456,7 +510,10 @@ class TopBar extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.shield_outlined, size: 12, color: kFaint),
                 SizedBox(width: 5),
-                Text('本地处理 · 照片不离开设备', style: TextStyle(color: kMuted, fontSize: 14)),
+                Text(
+                  '本地处理 · 照片不离开设备',
+                  style: TextStyle(color: kMuted, fontSize: 14),
+                ),
               ],
             ),
             const Spacer(),
@@ -539,7 +596,9 @@ class PhotoRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = horizontal ? _horizontal(context) : _vertical(context);
+    final Widget content = horizontal
+        ? _horizontal(context)
+        : _vertical(context);
     if (horizontal) return content;
     return Container(
       decoration: BoxDecoration(
@@ -556,10 +615,19 @@ class PhotoRail extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(14, 13, 10, 8),
       child: Row(
         children: <Widget>[
-          const Text('照片库', style: TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w700)),
+          const Text(
+            '照片库',
+            style: TextStyle(
+              color: kText,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(width: 8),
-          Text(controller.photos.length.toString().padLeft(2, '0'),
-              style: const TextStyle(color: kFaint, fontSize: 14)),
+          Text(
+            controller.photos.length.toString().padLeft(2, '0'),
+            style: const TextStyle(color: kFaint, fontSize: 14),
+          ),
           const Spacer(),
           if (controller.photos.isNotEmpty)
             InkWell(
@@ -569,8 +637,15 @@ class PhotoRail extends StatelessWidget {
                 width: 26,
                 height: 26,
                 margin: const EdgeInsets.only(right: 6),
-                decoration: BoxDecoration(color: kCardSoft, borderRadius: BorderRadius.circular(7)),
-                child: const Icon(Icons.delete_sweep_outlined, size: 16, color: kMuted),
+                decoration: BoxDecoration(
+                  color: kCardSoft,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: const Icon(
+                  Icons.delete_sweep_outlined,
+                  size: 16,
+                  color: kMuted,
+                ),
               ),
             ),
           InkWell(
@@ -579,7 +654,10 @@ class PhotoRail extends StatelessWidget {
             child: Container(
               width: 26,
               height: 26,
-              decoration: BoxDecoration(color: kCardSoft, borderRadius: BorderRadius.circular(7)),
+              decoration: BoxDecoration(
+                color: kCardSoft,
+                borderRadius: BorderRadius.circular(7),
+              ),
               child: const Icon(Icons.add, size: 16, color: kMuted),
             ),
           ),
@@ -600,7 +678,10 @@ class PhotoRail extends StatelessWidget {
           style: const TextStyle(fontSize: 14, color: kMuted),
         ),
         actions: <Widget>[
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: kAccent),
             onPressed: () => Navigator.pop(context, true),
@@ -622,10 +703,8 @@ class PhotoRail extends StatelessWidget {
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(10, 2, 10, 8),
                   itemCount: controller.photos.length,
-                  itemBuilder: (BuildContext context, int index) => _PhotoTile(
-                    controller: controller,
-                    index: index,
-                  ),
+                  itemBuilder: (BuildContext context, int index) =>
+                      _PhotoTile(controller: controller, index: index),
                 ),
         ),
         const Divider(height: 1, color: kLine),
@@ -642,7 +721,9 @@ class PhotoRail extends StatelessWidget {
                 ),
               ),
               Text(
-                controller.photos.isEmpty ? '本地照片' : '共 ${controller.photos.length} 张',
+                controller.photos.isEmpty
+                    ? '本地照片'
+                    : '共 ${controller.photos.length} 张',
                 style: const TextStyle(color: kFaint, fontSize: 14),
               ),
             ],
@@ -721,7 +802,10 @@ class _PhotoTile extends StatelessWidget {
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: selected ? kAccent : kLine, width: selected ? 1.2 : 1),
+              border: Border.all(
+                color: selected ? kAccent : kLine,
+                width: selected ? 1.2 : 1,
+              ),
             ),
             child: Row(
               children: <Widget>[
@@ -743,7 +827,11 @@ class _PhotoTile extends StatelessWidget {
                         item.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          color: kText,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -757,7 +845,10 @@ class _PhotoTile extends StatelessWidget {
                 ),
                 IconButton(
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints.tightFor(width: 26, height: 26),
+                  constraints: const BoxConstraints.tightFor(
+                    width: 26,
+                    height: 26,
+                  ),
                   tooltip: '删除这张照片',
                   onPressed: () => controller.removePhoto(index),
                   icon: const Icon(Icons.close, size: 16, color: kFaint),
@@ -801,13 +892,30 @@ class PreviewPane extends StatelessWidget {
                 Container(
                   width: 5,
                   height: 5,
-                  decoration: const BoxDecoration(color: kAccent, shape: BoxShape.circle),
+                  decoration: const BoxDecoration(
+                    color: kAccent,
+                    shape: BoxShape.circle,
+                  ),
                 ),
                 const SizedBox(width: 7),
-                const Text('预览', style: TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w600)),
+                const Text(
+                  '预览',
+                  style: TextStyle(
+                    color: kText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 if (!Platform.isAndroid) ...<Widget>[
                   const SizedBox(width: 9),
-                  const Text('LIVE COMPOSITION', style: TextStyle(color: kFaint, fontSize: 14, letterSpacing: 1.2)),
+                  const Text(
+                    'LIVE COMPOSITION',
+                    style: TextStyle(
+                      color: kFaint,
+                      fontSize: 14,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
                 ],
                 const Spacer(),
                 if (photo != null)
@@ -823,44 +931,50 @@ class PreviewPane extends StatelessWidget {
             child: photo == null
                 ? _emptyPreview()
                 : LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
-                      final double aspect = photo.aspect / 2;
-                      double width = constraints.maxWidth - (compact ? 20 : 40);
-                      double height = width / aspect;
-                      final double maxH = constraints.maxHeight - (compact ? 16 : 30);
-                      if (height > maxH) {
-                        height = maxH;
-                        width = height * aspect;
-                      }
-                      return Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(compact ? 8 : 14),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.35),
-                                  blurRadius: 26,
-                                  offset: const Offset(0, 12),
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                          final double aspect = photo.aspect / 2;
+                          double width =
+                              constraints.maxWidth - (compact ? 20 : 40);
+                          double height = width / aspect;
+                          final double maxH =
+                              constraints.maxHeight - (compact ? 16 : 30);
+                          if (height > maxH) {
+                            height = maxH;
+                            width = height * aspect;
+                          }
+                          return Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(compact ? 8 : 14),
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.35,
+                                      ),
+                                      blurRadius: 26,
+                                      offset: const Offset(0, 12),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: SizedBox(
-                              width: width,
-                              height: height,
-                              child: CustomPaint(
-                                painter: PosterPainter(
-                                  style: controller.currentStyle,
-                                  template: controller.template,
-                                  photo: photo.image,
-                                  camera: CameraCatalog.images[controller.template.id],
+                                child: SizedBox(
+                                  width: width,
+                                  height: height,
+                                  child: CustomPaint(
+                                    painter: PosterPainter(
+                                      style: controller.currentStyle,
+                                      template: controller.template,
+                                      photo: photo.image,
+                                      camera: CameraCatalog
+                                          .images[controller.template.id],
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
+                          );
+                        },
                   ),
           ),
         ],
@@ -889,7 +1003,12 @@ class PreviewPane extends StatelessWidget {
             const Text(
               '让器材，成为照片的一部分',
               textAlign: TextAlign.center,
-              style: TextStyle(color: kText, fontSize: 18, fontWeight: FontWeight.w700, letterSpacing: 0.5),
+              style: TextStyle(
+                color: kText,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
             ),
             const SizedBox(height: 7),
             const Text(
@@ -945,7 +1064,11 @@ class SettingsPanel extends StatelessWidget {
         _section('05', '相机屏幕', null, _ScreenFields(controller: controller)),
         if (embedded) ...<Widget>[
           const SizedBox(height: 14),
-          _ExportButtons(controller: controller, onExport: onExport, vertical: true),
+          _ExportButtons(
+            controller: controller,
+            onExport: onExport,
+            vertical: true,
+          ),
           const SizedBox(height: 8),
         ],
       ],
@@ -992,9 +1115,19 @@ class SettingsPanel extends StatelessWidget {
       padding: const EdgeInsets.only(top: 13, bottom: 4),
       child: Row(
         children: <Widget>[
-          const Text('版面设置', style: TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w700)),
+          const Text(
+            '版面设置',
+            style: TextStyle(
+              color: kText,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(width: 8),
-          const Text('STYLE', style: TextStyle(color: kFaint, fontSize: 14, letterSpacing: 1.2)),
+          const Text(
+            'STYLE',
+            style: TextStyle(color: kFaint, fontSize: 14, letterSpacing: 1.2),
+          ),
           const Spacer(),
           const Text('同步全部', style: TextStyle(color: kMuted, fontSize: 14)),
           const SizedBox(width: 6),
@@ -1030,12 +1163,29 @@ class SettingsPanel extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Text(number, style: const TextStyle(color: kAccent, fontSize: 14, fontWeight: FontWeight.w700)),
+              Text(
+                number,
+                style: const TextStyle(
+                  color: kAccent,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(width: 7),
-              Text(title, style: const TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w600)),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: kText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               if (trailing != null) ...<Widget>[
                 const Spacer(),
-                Text(trailing, style: const TextStyle(color: kFaint, fontSize: 14)),
+                Text(
+                  trailing,
+                  style: const TextStyle(color: kFaint, fontSize: 14),
+                ),
               ],
             ],
           ),
@@ -1061,21 +1211,75 @@ class _CameraStrip extends StatefulWidget {
 }
 
 class _CameraStripState extends State<_CameraStrip> {
+  static const double _cardWidth = 108;
+  static const double _cardGap = 8;
+  static const double _cardExtent = _cardWidth + _cardGap;
   final ScrollController _scroll = ScrollController();
   bool _canLeft = false;
   bool _canRight = true;
+  String? _lastCameraId;
 
   @override
   void initState() {
     super.initState();
+    _lastCameraId = widget.controller.currentStyle.cameraId;
     _scroll.addListener(_updateArrows);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _updateArrows());
+    widget.controller.addListener(_onControllerChanged);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateArrows();
+      _revealSelected(animate: false);
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant _CameraStrip oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onControllerChanged);
+      widget.controller.addListener(_onControllerChanged);
+      _lastCameraId = widget.controller.currentStyle.cameraId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _revealSelected(animate: false);
+      });
+    }
   }
 
   @override
   void dispose() {
+    widget.controller.removeListener(_onControllerChanged);
     _scroll.dispose();
     super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (!mounted) return;
+    final String cameraId = widget.controller.currentStyle.cameraId;
+    if (cameraId == _lastCameraId) return;
+    _lastCameraId = cameraId;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _revealSelected(animate: true);
+    });
+  }
+
+  void _revealSelected({required bool animate}) {
+    if (!_scroll.hasClients) return;
+    final int index = CameraCatalog.all.indexWhere(
+      (CameraTemplate camera) =>
+          camera.id == widget.controller.currentStyle.cameraId,
+    );
+    if (index < 0) return;
+    final double viewport = _scroll.position.viewportDimension;
+    final double target = (index * _cardExtent + _cardWidth / 2 - viewport / 2)
+        .clamp(0.0, _scroll.position.maxScrollExtent);
+    if (animate) {
+      _scroll.animateTo(
+        target,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
+    } else {
+      _scroll.jumpTo(target);
+    }
   }
 
   void _updateArrows() {
@@ -1092,8 +1296,15 @@ class _CameraStripState extends State<_CameraStrip> {
 
   void _nudge(double delta) {
     if (!_scroll.hasClients) return;
-    final double next = (_scroll.offset + delta).clamp(0.0, _scroll.position.maxScrollExtent);
-    _scroll.animateTo(next, duration: const Duration(milliseconds: 220), curve: Curves.easeOutCubic);
+    final double next = (_scroll.offset + delta).clamp(
+      0.0,
+      _scroll.position.maxScrollExtent,
+    );
+    _scroll.animateTo(
+      next,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   @override
@@ -1120,12 +1331,17 @@ class _CameraStripState extends State<_CameraStrip> {
               child: Listener(
                 onPointerSignal: (PointerSignalEvent event) {
                   if (event is PointerScrollEvent) {
-                    final double delta = event.scrollDelta.dx.abs() > event.scrollDelta.dy.abs()
+                    final double delta =
+                        event.scrollDelta.dx.abs() > event.scrollDelta.dy.abs()
                         ? event.scrollDelta.dx
                         : event.scrollDelta.dy;
                     if (delta != 0 && _scroll.hasClients) {
-                      _scroll.jumpTo((_scroll.offset + delta)
-                          .clamp(0.0, _scroll.position.maxScrollExtent));
+                      _scroll.jumpTo(
+                        (_scroll.offset + delta).clamp(
+                          0.0,
+                          _scroll.position.maxScrollExtent,
+                        ),
+                      );
                     }
                   }
                 },
@@ -1140,7 +1356,8 @@ class _CameraStripState extends State<_CameraStrip> {
                     separatorBuilder: (_, _) => const SizedBox(width: 8),
                     itemBuilder: (BuildContext context, int index) {
                       final CameraTemplate camera = CameraCatalog.all[index];
-                      final bool selected = widget.controller.currentStyle.cameraId == camera.id;
+                      final bool selected =
+                          widget.controller.currentStyle.cameraId == camera.id;
                       return InkWell(
                         borderRadius: BorderRadius.circular(7),
                         onTap: () => widget.controller.setCamera(camera.id),
@@ -1150,7 +1367,9 @@ class _CameraStripState extends State<_CameraStrip> {
                           decoration: BoxDecoration(
                             color: selected ? kAccentSoft : kCard,
                             borderRadius: BorderRadius.circular(7),
-                            border: Border.all(color: selected ? kAccent : kLine),
+                            border: Border.all(
+                              color: selected ? kAccent : kLine,
+                            ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1160,7 +1379,8 @@ class _CameraStripState extends State<_CameraStrip> {
                                   painter: _CameraThumbPainter(
                                     camera: CameraCatalog.images[camera.id],
                                     template: camera,
-                                    photo: widget.controller.selectedPhoto?.image,
+                                    photo:
+                                        widget.controller.selectedPhoto?.image,
                                   ),
                                   child: const SizedBox.expand(),
                                 ),
@@ -1168,13 +1388,21 @@ class _CameraStripState extends State<_CameraStrip> {
                               const SizedBox(height: 4),
                               Text(
                                 camera.brand,
-                                style: const TextStyle(color: kFaint, fontSize: 14, letterSpacing: 0.5),
+                                style: const TextStyle(
+                                  color: kFaint,
+                                  fontSize: 14,
+                                  letterSpacing: 0.5,
+                                ),
                               ),
                               Text(
                                 camera.model,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: kText, fontSize: 14, fontWeight: FontWeight.w600),
+                                style: const TextStyle(
+                                  color: kText,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
@@ -1198,7 +1426,11 @@ class _CameraStripState extends State<_CameraStrip> {
 }
 
 class _StripArrow extends StatelessWidget {
-  const _StripArrow({required this.icon, required this.enabled, required this.onTap});
+  const _StripArrow({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
   final IconData icon;
   final bool enabled;
   final VoidCallback onTap;
@@ -1219,7 +1451,11 @@ class _StripArrow extends StatelessWidget {
 }
 
 class _CameraThumbPainter extends CustomPainter {
-  _CameraThumbPainter({required this.camera, required this.template, required this.photo});
+  _CameraThumbPainter({
+    required this.camera,
+    required this.template,
+    required this.photo,
+  });
 
   final ui.Image? camera;
   final CameraTemplate template;
@@ -1233,7 +1469,12 @@ class _CameraThumbPainter extends CustomPainter {
     final double scale = math.min(size.width / iw, size.height / ih);
     final double aw = iw * scale;
     final double ah = ih * scale;
-    final Rect art = Rect.fromLTWH((size.width - aw) / 2, (size.height - ah) / 2, aw, ah);
+    final Rect art = Rect.fromLTWH(
+      (size.width - aw) / 2,
+      (size.height - ah) / 2,
+      aw,
+      ah,
+    );
     canvas.drawImageRect(
       camera!,
       Rect.fromLTWH(0, 0, iw, ih),
@@ -1250,13 +1491,21 @@ class _CameraThumbPainter extends CustomPainter {
     if (photo != null) {
       canvas.save();
       canvas.clipRect(screen);
-      final double ps = math.max(screen.width / photo!.width, screen.height / photo!.height);
+      final double ps = math.max(
+        screen.width / photo!.width,
+        screen.height / photo!.height,
+      );
       final double pw = photo!.width * ps;
       final double ph = photo!.height * ps;
       canvas.drawImageRect(
         photo!,
         Rect.fromLTWH(0, 0, photo!.width.toDouble(), photo!.height.toDouble()),
-        Rect.fromLTWH(screen.center.dx - pw / 2, screen.center.dy - ph / 2, pw, ph),
+        Rect.fromLTWH(
+          screen.center.dx - pw / 2,
+          screen.center.dy - ph / 2,
+          pw,
+          ph,
+        ),
         Paint()..filterQuality = FilterQuality.medium,
       );
       canvas.restore();
@@ -1283,7 +1532,9 @@ class _TitleFieldsState extends State<_TitleFields> {
   void initState() {
     super.initState();
     _title = TextEditingController(text: widget.controller.currentStyle.title);
-    _subtitle = TextEditingController(text: widget.controller.currentStyle.subtitle);
+    _subtitle = TextEditingController(
+      text: widget.controller.currentStyle.subtitle,
+    );
     widget.controller.addListener(_sync);
   }
 
@@ -1327,7 +1578,10 @@ class _TitleFieldsState extends State<_TitleFields> {
               height: 22,
               child: FittedBox(
                 fit: BoxFit.fill,
-                child: Switch(value: style.showTitle, onChanged: widget.controller.setShowTitle),
+                child: Switch(
+                  value: style.showTitle,
+                  onChanged: widget.controller.setShowTitle,
+                ),
               ),
             ),
           ],
@@ -1384,8 +1638,14 @@ class _LayoutFields extends StatelessWidget {
           children: <Widget>[
             const Text('相机大小', style: TextStyle(color: kMuted, fontSize: 14)),
             const Spacer(),
-            Text('${(style.cameraScale * 100).round()}%',
-                style: const TextStyle(color: kMuted, fontSize: 14, fontFamily: 'monospace')),
+            Text(
+              '${(style.cameraScale * 100).round()}%',
+              style: const TextStyle(
+                color: kMuted,
+                fontSize: 14,
+                fontFamily: 'monospace',
+              ),
+            ),
           ],
         ),
         SizedBox(
@@ -1462,7 +1722,11 @@ class _BackgroundFields extends StatelessWidget {
                   color: color,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: selected ? kAccent : (color.computeLuminance() > .8 ? kLine : const Color(0xFF3B3E42)),
+                    color: selected
+                        ? kAccent
+                        : (color.computeLuminance() > .8
+                              ? kLine
+                              : const Color(0xFF3B3E42)),
                     width: selected ? 2 : 1,
                   ),
                 ),
@@ -1471,7 +1735,10 @@ class _BackgroundFields extends StatelessWidget {
           }).toList(),
         ),
         const SizedBox(height: 6),
-        const Text('只影响上半幅；标题会自动选择深色或浅色。', style: TextStyle(color: kFaint, fontSize: 14)),
+        const Text(
+          '只影响上半幅；标题会自动选择深色或浅色。',
+          style: TextStyle(color: kFaint, fontSize: 14),
+        ),
       ],
     );
   }
@@ -1480,9 +1747,8 @@ class _BackgroundFields extends StatelessWidget {
     final Color? picked = await showDialog<Color>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.55),
-      builder: (BuildContext context) => _ColorPickerDialog(
-        initial: controller.currentStyle.topColor,
-      ),
+      builder: (BuildContext context) =>
+          _ColorPickerDialog(initial: controller.currentStyle.topColor),
     );
     if (picked != null) controller.setTopColor(picked);
   }
@@ -1501,9 +1767,19 @@ Color? _parseHex(String input) {
 }
 
 String _hexOf(Color color, {bool withAlpha = false}) {
-  final String rgb = color.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase();
+  final String rgb = color
+      .toARGB32()
+      .toRadixString(16)
+      .padLeft(8, '0')
+      .substring(2)
+      .toUpperCase();
   if (!withAlpha) return '#$rgb';
-  final String alpha = color.toARGB32().toRadixString(16).padLeft(8, '0').substring(0, 2).toUpperCase();
+  final String alpha = color
+      .toARGB32()
+      .toRadixString(16)
+      .padLeft(8, '0')
+      .substring(0, 2)
+      .toUpperCase();
   return '#$alpha$rgb';
 }
 
@@ -1544,7 +1820,10 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
   void _syncHex() {
     final String text = _hexOf(_color);
     if (_hex.text != text) {
-      _hex.value = TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
+      _hex.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
     }
   }
 
@@ -1613,7 +1892,14 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                 },
               ),
               const SizedBox(height: 18),
-              const Text('色相', style: TextStyle(color: secondary, fontSize: 14, fontWeight: FontWeight.w600)),
+              const Text(
+                '色相',
+                style: TextStyle(
+                  color: secondary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 6),
               _HueSlider(
                 hue: _hsv.hue,
@@ -1622,25 +1908,44 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
               const SizedBox(height: 14),
               Row(
                 children: <Widget>[
-                  const Text('不透明度', style: TextStyle(color: secondary, fontSize: 14)),
+                  const Text(
+                    '不透明度',
+                    style: TextStyle(color: secondary, fontSize: 14),
+                  ),
                   const Spacer(),
-                  Text('${(_alpha * 100).round()}%',
-                      style: const TextStyle(color: ink, fontSize: 14, fontFamily: 'monospace')),
+                  Text(
+                    '${(_alpha * 100).round()}%',
+                    style: const TextStyle(
+                      color: ink,
+                      fontSize: 14,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
               _AlphaSlider(color: _color, alpha: _alpha, onChanged: _setAlpha),
               const SizedBox(height: 14),
-              const Text('HEX', style: TextStyle(color: secondary, fontSize: 14)),
+              const Text(
+                'HEX',
+                style: TextStyle(color: secondary, fontSize: 14),
+              ),
               const SizedBox(height: 5),
               TextField(
                 controller: _hex,
-                style: const TextStyle(color: ink, fontSize: 16, fontFamily: 'monospace'),
+                style: const TextStyle(
+                  color: ink,
+                  fontSize: 16,
+                  fontFamily: 'monospace',
+                ),
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: surface,
                   isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(color: line),
@@ -1654,7 +1959,10 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                     borderSide: const BorderSide(color: kAccent, width: 1.4),
                   ),
                   hintText: '#RRGGBB',
-                  hintStyle: const TextStyle(color: Color(0xFF9AA1A9), fontSize: 14),
+                  hintStyle: const TextStyle(
+                    color: Color(0xFF9AA1A9),
+                    fontSize: 14,
+                  ),
                 ),
                 onChanged: (String value) {
                   final Color? parsed = _parseHex(value);
@@ -1689,7 +1997,10 @@ class _ColorPickerDialogState extends State<_ColorPickerDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 13),
                       ),
                       onPressed: () => Navigator.pop(context, _color),
-                      child: const Text('使用此颜色', style: TextStyle(fontSize: 14)),
+                      child: const Text(
+                        '使用此颜色',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
                 ],
@@ -1719,8 +2030,10 @@ class _SaturationValueField extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final Size size = Size(constraints.maxWidth, 210);
         return GestureDetector(
-          onPanDown: (DragDownDetails details) => _handle(details.localPosition, size),
-          onPanUpdate: (DragUpdateDetails details) => _handle(details.localPosition, size),
+          onPanDown: (DragDownDetails details) =>
+              _handle(details.localPosition, size),
+          onPanUpdate: (DragUpdateDetails details) =>
+              _handle(details.localPosition, size),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: SizedBox.fromSize(
@@ -1741,7 +2054,10 @@ class _SaturationValuePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Rect rect = Offset.zero & size;
-    canvas.drawRect(rect, Paint()..color = HSVColor.fromAHSV(1, hsv.hue, 1, 1).toColor());
+    canvas.drawRect(
+      rect,
+      Paint()..color = HSVColor.fromAHSV(1, hsv.hue, 1, 1).toColor(),
+    );
     canvas.drawRect(
       rect,
       Paint()
@@ -1760,7 +2076,10 @@ class _SaturationValuePainter extends CustomPainter {
           colors: <Color>[Colors.transparent, Colors.black],
         ).createShader(rect),
     );
-    final Offset thumb = Offset(hsv.saturation * size.width, (1 - hsv.value) * size.height);
+    final Offset thumb = Offset(
+      hsv.saturation * size.width,
+      (1 - hsv.value) * size.height,
+    );
     canvas.drawCircle(thumb, 8, Paint()..color = Colors.white);
     canvas.drawCircle(
       thumb,
@@ -1773,7 +2092,8 @@ class _SaturationValuePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _SaturationValuePainter oldDelegate) => oldDelegate.hsv != hsv;
+  bool shouldRepaint(covariant _SaturationValuePainter oldDelegate) =>
+      oldDelegate.hsv != hsv;
 }
 
 class _HueSlider extends StatelessWidget {
@@ -1791,8 +2111,10 @@ class _HueSlider extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double width = constraints.maxWidth;
         return GestureDetector(
-          onPanDown: (DragDownDetails details) => _handle(details.localPosition, width),
-          onPanUpdate: (DragUpdateDetails details) => _handle(details.localPosition, width),
+          onPanDown: (DragDownDetails details) =>
+              _handle(details.localPosition, width),
+          onPanUpdate: (DragUpdateDetails details) =>
+              _handle(details.localPosition, width),
           child: SizedBox(
             height: 24,
             child: CustomPaint(painter: _HuePainter(hue)),
@@ -1812,15 +2134,19 @@ class _HuePainter extends CustomPainter {
     final Rect rect = Rect.fromLTWH(0, 6, size.width, 12);
     final RRect rrect = RRect.fromRectAndRadius(rect, const Radius.circular(6));
     final List<Color> colors = <Color>[
-      for (int i = 0; i <= 6; i++) HSVColor.fromAHSV(1, (i * 60) % 360, 1, 1).toColor(),
+      for (int i = 0; i <= 6; i++)
+        HSVColor.fromAHSV(1, (i * 60) % 360, 1, 1).toColor(),
     ];
     canvas.drawRRect(
       rrect,
-      Paint()
-        ..shader = LinearGradient(colors: colors).createShader(rect),
+      Paint()..shader = LinearGradient(colors: colors).createShader(rect),
     );
     final double x = rect.left + (hue / 360) * rect.width;
-    canvas.drawCircle(Offset(x, rect.center.dy), 9, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      Offset(x, rect.center.dy),
+      9,
+      Paint()..color = Colors.white,
+    );
     canvas.drawCircle(
       Offset(x, rect.center.dy),
       9,
@@ -1832,11 +2158,16 @@ class _HuePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _HuePainter oldDelegate) => oldDelegate.hue != hue;
+  bool shouldRepaint(covariant _HuePainter oldDelegate) =>
+      oldDelegate.hue != hue;
 }
 
 class _AlphaSlider extends StatelessWidget {
-  const _AlphaSlider({required this.color, required this.alpha, required this.onChanged});
+  const _AlphaSlider({
+    required this.color,
+    required this.alpha,
+    required this.onChanged,
+  });
   final Color color;
   final double alpha;
   final ValueChanged<double> onChanged;
@@ -1851,11 +2182,15 @@ class _AlphaSlider extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double width = constraints.maxWidth;
         return GestureDetector(
-          onPanDown: (DragDownDetails details) => _handle(details.localPosition, width),
-          onPanUpdate: (DragUpdateDetails details) => _handle(details.localPosition, width),
+          onPanDown: (DragDownDetails details) =>
+              _handle(details.localPosition, width),
+          onPanUpdate: (DragUpdateDetails details) =>
+              _handle(details.localPosition, width),
           child: SizedBox(
             height: 24,
-            child: CustomPaint(painter: _AlphaPainter(color: color, alpha: alpha)),
+            child: CustomPaint(
+              painter: _AlphaPainter(color: color, alpha: alpha),
+            ),
           ),
         );
       },
@@ -1877,7 +2212,8 @@ class _AlphaPainter extends CustomPainter {
     const double square = 6;
     for (double x = 0; x < size.width; x += square) {
       for (double y = 6; y < 18; y += square) {
-        final bool light = ((x / square).floor() + (y / square).floor()) % 2 == 0;
+        final bool light =
+            ((x / square).floor() + (y / square).floor()) % 2 == 0;
         canvas.drawRect(
           Rect.fromLTWH(x, y, square, square),
           Paint()..color = light ? Colors.white : const Color(0xFFD8DCE1),
@@ -1888,12 +2224,19 @@ class _AlphaPainter extends CustomPainter {
       rect,
       Paint()
         ..shader = LinearGradient(
-          colors: <Color>[color.withValues(alpha: 0), color.withValues(alpha: 1)],
+          colors: <Color>[
+            color.withValues(alpha: 0),
+            color.withValues(alpha: 1),
+          ],
         ).createShader(rect),
     );
     canvas.restore();
     final double x = rect.left + alpha * rect.width;
-    canvas.drawCircle(Offset(x, rect.center.dy), 9, Paint()..color = Colors.white);
+    canvas.drawCircle(
+      Offset(x, rect.center.dy),
+      9,
+      Paint()..color = Colors.white,
+    );
     canvas.drawCircle(
       Offset(x, rect.center.dy),
       9,
@@ -1945,19 +2288,29 @@ class _ScreenFields extends StatelessWidget {
               height: 22,
               child: FittedBox(
                 fit: BoxFit.fill,
-                child: Switch(value: style.screenGlare, onChanged: controller.setScreenGlare),
+                child: Switch(
+                  value: style.screenGlare,
+                  onChanged: controller.setScreenGlare,
+                ),
               ),
             ),
           ],
         ),
-        const Text('默认关闭；开启后更接近真实相机的玻璃质感。', style: TextStyle(color: kFaint, fontSize: 14)),
+        const Text(
+          '默认关闭；开启后更接近真实相机的玻璃质感。',
+          style: TextStyle(color: kFaint, fontSize: 14),
+        ),
       ],
     );
   }
 }
 
 class _ModePill extends StatelessWidget {
-  const _ModePill({required this.label, required this.selected, required this.onTap});
+  const _ModePill({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
   final String label;
   final bool selected;
   final VoidCallback onTap;
@@ -1976,7 +2329,11 @@ class _ModePill extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(color: selected ? kAccent : kMuted, fontSize: 14, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: selected ? kAccent : kMuted,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
@@ -1984,7 +2341,11 @@ class _ModePill extends StatelessWidget {
 }
 
 class _ExportButtons extends StatelessWidget {
-  const _ExportButtons({required this.controller, required this.onExport, this.vertical = false});
+  const _ExportButtons({
+    required this.controller,
+    required this.onExport,
+    this.vertical = false,
+  });
   final GearLabController controller;
   final ValueChanged<ExportScope> onExport;
   final bool vertical;
@@ -2017,7 +2378,9 @@ class _ExportButtons extends StatelessWidget {
               side: const BorderSide(color: kLine),
               padding: const EdgeInsets.symmetric(vertical: 13),
             ),
-            onPressed: controller.selectedPhoto == null ? null : () => onExport(ExportScope.current),
+            onPressed: controller.selectedPhoto == null
+                ? null
+                : () => onExport(ExportScope.current),
             child: const Text('导出当前'),
           ),
         ),
@@ -2065,7 +2428,9 @@ class _ExportDialogState extends State<ExportDialog> {
   @override
   void initState() {
     super.initState();
-    scope = widget.initialScope == ExportScope.selected ? ExportScope.all : widget.initialScope;
+    scope = widget.initialScope == ExportScope.selected
+        ? ExportScope.all
+        : widget.initialScope;
     if (scope == ExportScope.all && widget.controller.photos.isEmpty) {
       scope = ExportScope.current;
     }
@@ -2089,7 +2454,14 @@ class _ExportDialogState extends State<ExportDialog> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  const Text('导出作品', style: TextStyle(color: kText, fontSize: 19, fontWeight: FontWeight.w700)),
+                  const Text(
+                    '导出作品',
+                    style: TextStyle(
+                      color: kText,
+                      fontSize: 19,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                   const Spacer(),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
@@ -2098,7 +2470,10 @@ class _ExportDialogState extends State<ExportDialog> {
                 ],
               ),
               if (!Platform.isAndroid)
-                const Text('使用每张照片自己的设置，生成本地作品。', style: TextStyle(color: kMuted, fontSize: 14)),
+                const Text(
+                  '使用每张照片自己的设置，生成本地作品。',
+                  style: TextStyle(color: kMuted, fontSize: 14),
+                ),
               const SizedBox(height: 18),
               const _DialogLabel('导出范围'),
               Row(
@@ -2124,11 +2499,29 @@ class _ExportDialogState extends State<ExportDialog> {
               const _DialogLabel('输出尺寸'),
               Row(
                 children: <Widget>[
-                  _SizeChoice(label: '1080', sub: '高清', value: 1080, current: width, onTap: (int v) => setState(() => width = v)),
+                  _SizeChoice(
+                    label: '1080',
+                    sub: '高清',
+                    value: 1080,
+                    current: width,
+                    onTap: (int v) => setState(() => width = v),
+                  ),
                   const SizedBox(width: 8),
-                  _SizeChoice(label: '1440', sub: '2K', value: 1440, current: width, onTap: (int v) => setState(() => width = v)),
+                  _SizeChoice(
+                    label: '1440',
+                    sub: '2K',
+                    value: 1440,
+                    current: width,
+                    onTap: (int v) => setState(() => width = v),
+                  ),
                   const SizedBox(width: 8),
-                  _SizeChoice(label: '2160', sub: '超清', value: 2160, current: width, onTap: (int v) => setState(() => width = v)),
+                  _SizeChoice(
+                    label: '2160',
+                    sub: '超清',
+                    value: 2160,
+                    current: width,
+                    onTap: (int v) => setState(() => width = v),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -2158,7 +2551,14 @@ class _ExportDialogState extends State<ExportDialog> {
                   children: <Widget>[
                     const _DialogLabel('JPG 画质'),
                     const Spacer(),
-                    Text('${quality.round()}', style: const TextStyle(color: kText, fontSize: 14, fontFamily: 'monospace')),
+                    Text(
+                      '${quality.round()}',
+                      style: const TextStyle(
+                        color: kText,
+                        fontSize: 14,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
                   ],
                 ),
                 Slider(
@@ -2169,13 +2569,20 @@ class _ExportDialogState extends State<ExportDialog> {
                   onChanged: (double v) => setState(() => quality = v),
                 ),
                 if (!Platform.isAndroid)
-                  const Text('默认 100：最高质量、最低压缩。', style: TextStyle(color: kFaint, fontSize: 14)),
+                  const Text(
+                    '默认 100：最高质量、最低压缩。',
+                    style: TextStyle(color: kFaint, fontSize: 14),
+                  ),
               ],
               const SizedBox(height: 16),
               _DialogLabel(Platform.isAndroid ? '保存到相册' : '保存到'),
               Container(
                 padding: const EdgeInsets.fromLTRB(11, 8, 7, 8),
-                decoration: BoxDecoration(color: kCard, borderRadius: BorderRadius.circular(7), border: Border.all(color: kLine)),
+                decoration: BoxDecoration(
+                  color: kCard,
+                  borderRadius: BorderRadius.circular(7),
+                  border: Border.all(color: kLine),
+                ),
                 child: Row(
                   children: <Widget>[
                     const Icon(Icons.folder_outlined, size: 15, color: kFaint),
@@ -2188,7 +2595,6 @@ class _ExportDialogState extends State<ExportDialog> {
                         style: const TextStyle(color: kMuted, fontSize: 14),
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -2255,7 +2661,11 @@ class _DialogLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Text(
     text,
-    style: const TextStyle(color: kMuted, fontSize: 14, fontWeight: FontWeight.w600),
+    style: const TextStyle(
+      color: kMuted,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+    ),
   );
 }
 
@@ -2345,7 +2755,10 @@ class _SizeChoice extends StatelessWidget {
                 sub,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: selected ? kAccent : kFaint, fontSize: 14),
+                style: TextStyle(
+                  color: selected ? kAccent : kFaint,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -2380,7 +2793,11 @@ class _ExportProgressOverlay extends StatelessWidget {
               children: <Widget>[
                 const Text(
                   '正在导出',
-                  style: TextStyle(color: kText, fontSize: 16, fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    color: kText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 14),
                 LinearProgressIndicator(
@@ -2407,7 +2824,11 @@ class _ExportProgressOverlay extends StatelessWidget {
                 Text(
                   '${progress.done} / ${progress.total}',
                   textAlign: TextAlign.right,
-                  style: const TextStyle(color: kFaint, fontSize: 14, fontFamily: 'monospace'),
+                  style: const TextStyle(
+                    color: kFaint,
+                    fontSize: 14,
+                    fontFamily: 'monospace',
+                  ),
                 ),
               ],
             ),
